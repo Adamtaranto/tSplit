@@ -3,7 +3,7 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - python >=3.12
+  - python==3.12
   - mummer
   - blast
   - pip
@@ -12,3 +12,4 @@ dependencies:
       - "pymummer>=0.12.0"
       - pytest
       - hatch
+      - rich
