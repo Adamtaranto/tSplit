@@ -27,6 +27,10 @@ dependencies = ["biopython>=1.70", "pymummer>=0.12.0", "tqdm", "rich"]
 # Dynamic versioning
 dynamic = ["version"]
 
+# Optional dependencies for testing
+[project.optional-dependencies]
+dev = ["hatch", "isort", "mkdocs-jupyter","mkdocs-material", "mkdocs", "mkdocstrings-python", "mkdocstrings", "notebook", "numpydoc-validation", "pre-commit", "pymdown-extensions", "pytest-cov", "pytest", "ruff"]
+
 # Project URLs
 [project.urls]
 homepage = "https://github.com/adamtaranto/tSplit"
@@ -60,10 +64,6 @@ fallback-version = "0.0.0"
 # Version file location for VCS
 [tool.hatch.build.hooks.vcs]
 version-file = "src/tsplit/_version.py"
-
-# Optional dependencies for testing
-[project.optional-dependencies]
-dev = ["hatch", "isort", "mkdocs-jupyter","mkdocs-material", "mkdocs", "mkdocstrings-python", "mkdocstrings", "notebook", "numpydoc-validation", "pre-commit", "pymdown-extensions", "pytest-cov", "pytest", "ruff"]
 
 [tool.pytest.ini_options]
 addopts = "-v --cov=tsplit --cov-branch --cov-report=xml --cov-report=term"
