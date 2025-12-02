@@ -1,6 +1,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PyPI version](https://badge.fury.io/py/tSplit.svg)](https://badge.fury.io/py/tSplit)
 [![codecov](https://codecov.io/gh/Adamtaranto/tSplit/graph/badge.svg?token=24AGM1OWS5)](https://codecov.io/gh/Adamtaranto/tSplit)
+[![Downloads](https://pepy.tech/badge/tsplit)](https://pepy.tech/project/tsplit)
 
 # tSplit the TE-splitter
 
@@ -13,6 +14,7 @@ Optionally, `tsplit TIR` can also compose synthetic MITES from complete DNA tran
 - [Algorithm overview](#algorithm-overview)
 - [Options and usage](#options-and-usage)
   - [Installing tSplit](#installing-tsplit)
+  - [Example usage](#example-usage)
 
 ## Algorithm overview
 
@@ -40,14 +42,69 @@ Requirements:
 
 Installation options:
 
-```bash
-# Install from PyPi:
-pip install tsplit
+1. Install from PyPi.
+   This will get you the latest stable release.
 
-# Clone and install latest dev version from this repository:
+```bash
+pip install tsplit
+```
+
+2. Pip install directly from this git repository.
+
+This is the best way to ensure you have the latest development version.
+
+```bash
+pip install git+https://github.com/Adamtaranto/tSplit.git
+```
+
+3. Clone from this repository and install as a local Python package.
+
+Do this if you want to edit the code.
+
+```bash
 git clone https://github.com/Adamtaranto/tSplit.git && cd tSplit && pip install -e '.[dev]'
 ```
 
+### Example usage
+
+tSplit can be run in two modes: `tsplit LTR` and `tsplit TIR`, for extracting long terminal repeats or terminal inverted repeats, respectively.
+
+Options are the same for each.
+
+### tsplit TIR
+
+For each element in _TIR_element.fa_ split into internal and external (TIR) segments.
+
+Split segments will be written to _TIR_split_tsplit_output.fasta_ with suffix "\_I" for internal or "\_TIR" for external segments.
+
+TIRs must be at least 10bp in length and share 80%
+identity and occur within 10bp of each end of the input element.
+
+Additionally, synthetic MITEs will be constructed by concatenation of left and right TIRs, with internal segments excised.
+
+```bash
+tsplit TIR -i tests/data/TIR_element.fa -p TIR_split --makemites --keeptemp
+
+# Equivalet to defaults
+tsplit TIR -i tests/data/TIR_element.fa -p TIR_split --maxdist 10 --minid 80.0 --minterm 10 --method blastn --splitmode split --makemites --keeptemp
+```
+
+Output: `TIR_split_tsplit_output.fasta`
+
+### tsplit LTR
+
+For each element in _LTR_retrotransposon.fa_ split into internal and external segments.
+
+Split segments will be written to _LTR_split_tsplit_output.fasta_ with suffix "\_I" for internal or "\_LTR" for external segments.
+
+LTRs must be at least 10bp in length and share 80% identity and occur within 10bp of each end of the input element.
+
+```bash
+tsplit LTR -i tests/data/LTR_retrotransposon.fa -p LTR_split
+```
+
+Output: LTR_split_tsplit_output.fasta
+
 ## License
 
-Software provided under MIT license.
+Software provided under GPL-3 license.
