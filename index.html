@@ -308,6 +308,33 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#example-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example usage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tsplit-tir" class="md-nav__link">
+    <span class="md-ellipsis">
+      tsplit TIR
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tsplit-ltr" class="md-nav__link">
+    <span class="md-ellipsis">
+      tsplit LTR
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -437,6 +464,33 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#example-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example usage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tsplit-tir" class="md-nav__link">
+    <span class="md-ellipsis">
+      tsplit TIR
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tsplit-ltr" class="md-nav__link">
+    <span class="md-ellipsis">
+      tsplit LTR
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -469,7 +523,8 @@
 
 <p><a href="https://opensource.org/licenses/MIT"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" /></a>
 <a href="https://badge.fury.io/py/tSplit"><img alt="PyPI version" src="https://badge.fury.io/py/tSplit.svg" /></a>
-<a href="https://codecov.io/gh/Adamtaranto/tSplit"><img alt="codecov" src="https://codecov.io/gh/Adamtaranto/tSplit/graph/badge.svg?token=24AGM1OWS5" /></a></p>
+<a href="https://codecov.io/gh/Adamtaranto/tSplit"><img alt="codecov" src="https://codecov.io/gh/Adamtaranto/tSplit/graph/badge.svg?token=24AGM1OWS5" /></a>
+<a href="https://pepy.tech/project/tsplit"><img alt="Downloads" src="https://pepy.tech/badge/tsplit" /></a></p>
 <h1 id="tsplit-the-te-splitter">tSplit the TE-splitter</h1>
 <p>Extract terminal repeats from retrotransposons (LTRs) or DNA transposons (TIRs). Returns compontent segments of the element for use with transposon mapping tools.</p>
 <p>Optionally, <code>tsplit TIR</code> can also compose synthetic MITES from complete DNA transposons.</p>
@@ -478,6 +533,7 @@
 <li><a href="#algorithm-overview">Algorithm overview</a></li>
 <li><a href="#options-and-usage">Options and usage</a></li>
 <li><a href="#installing-tsplit">Installing tSplit</a></li>
+<li><a href="#example-usage">Example usage</a></li>
 </ul>
 <h2 id="algorithm-overview">Algorithm overview</h2>
 <p>tSplit attempts to identify terminal repeats in transposable elements by
@@ -488,9 +544,9 @@ tuneable heuristics to select an alignment pair most likely to represent an LTR 
 <li>If <code>tsplit LTR</code>: Retain only alignment pairs on the same strand (tandem repeats)</li>
 <li>If <code>tsplit TIR</code>: Retain only alignment pairs on opposite strands (inverse repeats)</li>
 <li>Retain pairs for which the 5' match begins within x bases of element start
-     and whose 3' match ends within x bases of element end</li>
+   and whose 3' match ends within x bases of element end</li>
 <li>If multiple candidates remain select alignment pair with largest internal segment
-  (i.e. closest to element ends)</li>
+   (i.e. closest to element ends)</li>
 </ol>
 <h2 id="options-and-usage">Options and usage</h2>
 <h3 id="installing-tsplit">Installing tSplit</h3>
@@ -501,14 +557,48 @@ tuneable heuristics to select an alignment pair most likely to represent an LTR 
 <li><a href="ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/">BLAST+</a> (Optional)</li>
 </ul>
 <p>Installation options:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Install from PyPi:</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>pip<span class="w"> </span>install<span class="w"> </span>tsplit
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Clone and install latest dev version from this repository:</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Adamtaranto/tSplit.git<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>tSplit<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;.[dev]&#39;</span>
+<ol>
+<li>Install from PyPi.
+   This will get you the latest stable release.</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>tsplit
 </code></pre></div>
+<ol>
+<li>Pip install directly from this git repository.</li>
+</ol>
+<p>This is the best way to ensure you have the latest development version.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/Adamtaranto/tSplit.git
+</code></pre></div>
+<ol>
+<li>Clone from this repository and install as a local Python package.</li>
+</ol>
+<p>Do this if you want to edit the code.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Adamtaranto/tSplit.git<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>tSplit<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;.[dev]&#39;</span>
+</code></pre></div>
+<h3 id="example-usage">Example usage</h3>
+<p>tSplit can be run in two modes: <code>tsplit LTR</code> and <code>tsplit TIR</code>, for extracting long terminal repeats or terminal inverted repeats, respectively.</p>
+<p>Options are the same for each.</p>
+<h3 id="tsplit-tir">tsplit TIR</h3>
+<p>For each element in <em>TIR_element.fa</em> split into internal and external (TIR) segments.</p>
+<p>Split segments will be written to <em>TIR_split_tsplit_output.fasta</em> with suffix "_I" for internal or "_TIR" for external segments.</p>
+<p>TIRs must be at least 10bp in length and share 80%
+identity and occur within 10bp of each end of the input element.</p>
+<p>Additionally, synthetic MITEs will be constructed by concatenation of left and right TIRs, with internal segments excised.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>tsplit<span class="w"> </span>TIR<span class="w"> </span>-i<span class="w"> </span>tests/data/TIR_element.fa<span class="w"> </span>-p<span class="w"> </span>TIR_split<span class="w"> </span>--makemites<span class="w"> </span>--keeptemp
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Equivalet to defaults</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>tsplit<span class="w"> </span>TIR<span class="w"> </span>-i<span class="w"> </span>tests/data/TIR_element.fa<span class="w"> </span>-p<span class="w"> </span>TIR_split<span class="w"> </span>--maxdist<span class="w"> </span><span class="m">10</span><span class="w"> </span>--minid<span class="w"> </span><span class="m">80</span>.0<span class="w"> </span>--minterm<span class="w"> </span><span class="m">10</span><span class="w"> </span>--method<span class="w"> </span>blastn<span class="w"> </span>--splitmode<span class="w"> </span>split<span class="w"> </span>--makemites<span class="w"> </span>--keeptemp
+</code></pre></div>
+<p>Output: <code>TIR_split_tsplit_output.fasta</code></p>
+<h3 id="tsplit-ltr">tsplit LTR</h3>
+<p>For each element in <em>LTR_retrotransposon.fa</em> split into internal and external segments.</p>
+<p>Split segments will be written to <em>LTR_split_tsplit_output.fasta</em> with suffix "_I" for internal or "_LTR" for external segments.</p>
+<p>LTRs must be at least 10bp in length and share 80% identity and occur within 10bp of each end of the input element.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>tsplit<span class="w"> </span>LTR<span class="w"> </span>-i<span class="w"> </span>tests/data/LTR_retrotransposon.fa<span class="w"> </span>-p<span class="w"> </span>LTR_split
+</code></pre></div>
+<p>Output: LTR_split_tsplit_output.fasta</p>
 <h2 id="license">License</h2>
-<p>Software provided under MIT license.</p>
+<p>Software provided under GPL-3 license.</p>
 
 
 
