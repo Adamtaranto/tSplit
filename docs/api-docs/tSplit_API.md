@@ -1,13 +1,11 @@
 # getTIRs Class
 
 ::: tsplit.parseAlign.getTIRs
-    options:
-      members:
-        - __init__
+options:
+members: - **init**
 
 # getLTRs Class
 
 ::: tsplit.parseAlign.getLTRs
-    options:
-      members:
-        - __init__
+options:
+members: - **init**

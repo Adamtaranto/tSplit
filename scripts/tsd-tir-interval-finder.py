@@ -1,4 +1,14 @@
 #!/usr/bin/env python3
+"""
+Find inverted repeats (TIRs) and target site duplications (TSDs) in DNA sequences.
+
+This module provides functionality to:
+- Parse genomic intervals from DNA sequences
+- Find inverted repeats between two sequence blocks with mismatch tolerance
+- Identify target site duplications (TSDs) flanking the inverted repeats
+- Output results in tab-delimited and GFF3 formats
+
+"""
 
 import argparse
 import sys
@@ -10,7 +20,7 @@ from tqdm import tqdm
 
 
 def parse_args() -> argparse.Namespace:
-    """Parse and validate command line arguments"""
+    """Parse and validate command line arguments."""
     parser = argparse.ArgumentParser(
         description='Find inverted repeats and TSDs in DNA sequences'
     )
@@ -63,7 +73,7 @@ def parse_args() -> argparse.Namespace:
 
 
 class GenomicInterval(NamedTuple):
-    """Store start and end coordinates for a genomic interval"""
+    """Store start and end coordinates for a genomic interval."""
 
     start: int  # 1-based start position
     end: int  # 1-based end position
@@ -77,10 +87,12 @@ def load_sequence(fasta_path: str, min_length: int) -> Seq:
         fasta_path: Path to FASTA file
         min_length: Minimum required sequence length
 
-    Returns:
+    Returns
+    -------
         Bio.Seq.Seq: The loaded sequence
 
-    Raises:
+    Raises
+    ------
         ValueError: If file contains multiple sequences or sequence is too short
         FileNotFoundError: If file cannot be opened
     """
@@ -120,10 +132,12 @@ def parse_interval(
         seq_length: Length of the reference sequence
         interval_name: Name of interval for error messages
 
-    Returns:
+    Returns
+    -------
         GenomicInterval with start and end coordinates
 
-    Raises:
+    Raises
+    ------
         ValueError: If format is invalid or coordinates are out of bounds
     """
     try:
@@ -154,7 +168,7 @@ def parse_interval(
 
 
 def check_interval_overlap(left: GenomicInterval, right: GenomicInterval) -> bool:
-    """Check if two genomic intervals overlap"""
+    """Check if two genomic intervals overlap."""
     return (left.start <= right.end) and (right.start <= left.end)
 
 
@@ -162,16 +176,17 @@ def extract_sequence_blocks(
     sequence: Seq, left: GenomicInterval, right: GenomicInterval
 ) -> Tuple[Seq, Seq]:
     """
-    Extract left and right sequence blocks from genomic intervals.
-    Convert from 1-based to 0-based coordinates for slicing.
+    Extract left and right sequence blocks from genomic intervals and convert from 1-based to 0-based coordinates for slicing.
 
     Args:
         sequence: Full DNA sequence
         left: Left genomic interval (1-based coords)
         right: Right genomic interval (1-based coords)
 
-    Returns:
+    Returns
+    -------
         Tuple of (left_block, right_block)
+
     """
     # Convert to 0-based coordinates for slicing
     print('\nExtracting sequence blocks...')
@@ -186,18 +201,20 @@ def extract_sequence_blocks(
 
 def calculate_hamming_distance(seq1: str, seq2: str) -> int:
     """
-    Calculate the Hamming distance between two sequences.
-    'N' in either sequence always counts as a mismatch.
+    Calculate the Hamming distance between two sequences. 'N' in either sequence always counts as a mismatch.
 
     Args:
         seq1: First sequence
         seq2: Second sequence
 
-    Returns:
+    Returns
+    -------
         int: Number of positions at which sequences differ
 
-    Raises:
+    Raises
+    ------
         ValueError: If sequences have different lengths
+
     """
     if len(seq1) != len(seq2):
         raise ValueError('Sequences must have equal length')
@@ -217,7 +234,8 @@ def find_inverted_repeats(
         k: Length of kmers to use
         n_mismatches: Number of mismatches to tolerate
 
-    Yields:
+    Yields
+    ------
         Tuples of (left_kmer, left_position, right_kmer, right_position)
     """
     # Reverse complement right block
@@ -282,7 +300,8 @@ def find_tsds(
         n_mismatches: Number of mismatches to tolerate
         min_tsd_len: Minimum length of TSD to report
 
-    Yields:
+    Yields
+    ------
         Tuples of (left_kmer, left_position, right_kmer, right_position, left_tsd, right_tsd)
         Note: right_tsd is reverse complemented in the output
     """
@@ -334,7 +353,8 @@ def correct_reverse_complement_coordinate(position: int, sequence_length: int) -
         position: Position in the reverse complemented sequence (0-based)
         sequence_length: Length of the original sequence
 
-    Returns:
+    Returns
+    -------
         int: Corrected position in the original sequence
     """
     return sequence_length - position
@@ -355,7 +375,8 @@ def correct_output_coordinates(
         right_start: Start coordinate of right interval (1-based)
         right_seq_length: Length of right sequence block
 
-    Returns:
+    Returns
+    -------
         List of corrected result tuples
     """
     corrected_results = []
@@ -602,7 +623,7 @@ def write_gff(
 
 
 def main():
-    """Main function to run the inverted repeat and TSD search"""
+    """Run the inverted repeat and TSD search."""
     # Parse command line arguments
     args = parse_args()
 

@@ -16,27 +16,31 @@ Caveats:
 - Does not perform alignment of candidate TIRs (i.e. only tolerates mismatches, not gaps).
 - Only detects terminal k bases of a TIR, actual TIRs may be longer on manual inspection.
 
-*data/mintest.fa*
+_data/mintest.fa_
+
 ```
 >test_seq   tsd_5_TCAGT_k8_AGTCCCGG_int_1-21_33-50
 GGTCAGTAGTCCCGGATGATACTATCCATATGCCGGGACTTCAGTGCGCA
 ```
 
 Example:
+
 ```bash
 python tsd-tir-interval-finder.py --infile data/mintest.fa --left 1-21 --right 33-50 \
 -k 8 -n 0 --max-tsd 6 --min-tsd 2 --tsd-mismatches 1 --output test_results.tsv --gff test_annotations.gff3
 ```
 
 Output:
-*test_results.tsv*
+_test_results.tsv_
+
 ```
 left_pos	left_kmer	right_pos	right_kmer	mismatch_count	left_tsd	right_tsd	tsd_mismatch_count	tsd_len
 8	AGTCCCGG	40	AGTCCCGG	0	TCAGT	TCAGT	0	5
 
 ```
 
-*test_annotations.gff3*
+_test_annotations.gff3_
+
 ```
 ##gff-version 3
 test_seq	TIR_finder	search_region	1	21	.	.	.	ID=search_region_L;Name=Left_search_interval

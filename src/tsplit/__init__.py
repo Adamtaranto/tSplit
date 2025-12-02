@@ -1,5 +1,5 @@
 """
-This is tSplit: A package for analyzing and manipulating transposable elements in genomic sequences.
+Welcome to tSplit: A package for analyzing and manipulating transposable elements in genomic sequences.
 
 This package provides tools to identify, extract, and analyze transposable elements (TEs)
 in DNA sequences, with a focus on terminal repeats. The main functionality includes:

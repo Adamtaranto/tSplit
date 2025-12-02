@@ -11,10 +11,10 @@ Optionally, `tsplit TIR` can also compose synthetic MITES from complete DNA tran
 
 ## Table of contents
 
-* [Algorithm overview](#algorithm-overview)
-* [Options and usage](#options-and-usage)
-  * [Installing tSplit](#installing-tsplit)
-  * [Example usage](#example-usage)
+- [Algorithm overview](#algorithm-overview)
+- [Options and usage](#options-and-usage)
+  - [Installing tSplit](#installing-tsplit)
+  - [Example usage](#example-usage)
 
 ## Algorithm overview
 
@@ -22,13 +22,13 @@ tSplit attempts to identify terminal repeats in transposable elements by
 first aligning each element to itself using `blastn` or `nucmer`, and then applying a set of
 tuneable heuristics to select an alignment pair most likely to represent an LTR or TIR, as follows:
 
-  1. Exclude all diagonal/self-matches
-  2. If `tsplit LTR`: Retain only alignment pairs on the same strand (tandem repeats)
-  3. If `tsplit TIR`: Retain only alignment pairs on opposite strands (inverse repeats)
-  4. Retain pairs for which the 5' match begins within x bases of element start
-     and whose 3' match ends within x bases of element end
-  5. If multiple candidates remain select alignment pair with largest internal segment
-  (i.e. closest to element ends)
+1. Exclude all diagonal/self-matches
+2. If `tsplit LTR`: Retain only alignment pairs on the same strand (tandem repeats)
+3. If `tsplit TIR`: Retain only alignment pairs on opposite strands (inverse repeats)
+4. Retain pairs for which the 5' match begins within x bases of element start
+   and whose 3' match ends within x bases of element end
+5. If multiple candidates remain select alignment pair with largest internal segment
+   (i.e. closest to element ends)
 
 ## Options and usage
 
@@ -36,17 +36,32 @@ tuneable heuristics to select an alignment pair most likely to represent an LTR 
 
 Requirements:
 
-* [pymummer](https://pypi.python.org/pypi/pymummer) version >= 0.10.3 with wrapper for nucmer option *--diagfactor*.
-* [MUMmer](http://mummer.sourceforge.net/)
-* [BLAST+](ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/) (Optional)
+- [pymummer](https://pypi.python.org/pypi/pymummer) version >= 0.10.3 with wrapper for nucmer option _--diagfactor_.
+- [MUMmer](http://mummer.sourceforge.net/)
+- [BLAST+](ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/) (Optional)
 
 Installation options:
 
-```bash
-# Install from PyPi:
-pip install tsplit
+1. Install from PyPi.
+   This will get you the latest stable release.
 
-# Clone and install latest dev version from this repository:
+```bash
+pip install tsplit
+```
+
+2. Pip install directly from this git repository.
+
+This is the best way to ensure you have the latest development version.
+
+```bash
+pip install git+https://github.com/Adamtaranto/tSplit.git
+```
+
+3. Clone from this repository and install as a local Python package.
+
+Do this if you want to edit the code.
+
+```bash
 git clone https://github.com/Adamtaranto/tSplit.git && cd tSplit && pip install -e '.[dev]'
 ```
 
@@ -58,9 +73,9 @@ Options are the same for each.
 
 ### tsplit TIR
 
-For each element in *TIR_element.fa* split into internal and external (TIR) segments.
+For each element in _TIR_element.fa_ split into internal and external (TIR) segments.
 
-Split segments will be written to *TIR_split_tsplit_output.fasta* with suffix "_I" for internal or "_TIR" for external segments.
+Split segments will be written to _TIR_split_tsplit_output.fasta_ with suffix "\_I" for internal or "\_TIR" for external segments.
 
 TIRs must be at least 10bp in length and share 80%
 identity and occur within 10bp of each end of the input element.
@@ -78,9 +93,9 @@ Output: `TIR_split_tsplit_output.fasta`
 
 ### tsplit LTR
 
-For each element in *LTR_retrotransposon.fa* split into internal and external segments.
+For each element in _LTR_retrotransposon.fa_ split into internal and external segments.
 
-Split segments will be written to *LTR_split_tsplit_output.fasta* with suffix "_I" for internal or "_LTR" for external segments.
+Split segments will be written to _LTR_split_tsplit_output.fasta_ with suffix "\_I" for internal or "\_LTR" for external segments.
 
 LTRs must be at least 10bp in length and share 80% identity and occur within 10bp of each end of the input element.
 
@@ -92,4 +107,4 @@ Output: LTR_split_tsplit_output.fasta
 
 ## License
 
-Software provided under MIT license.
+Software provided under GPL-3 license.

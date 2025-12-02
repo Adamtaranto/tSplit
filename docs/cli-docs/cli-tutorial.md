@@ -14,9 +14,9 @@ Options are the same for each.
 
 ## tsplit TIR
 
-For each element in *TIR_element.fa* split into internal and external (TIR) segments.
+For each element in _TIR_element.fa_ split into internal and external (TIR) segments.
 
-Split segments will be written to *TIR_split_tsplit_output.fasta* with suffix "_I" for internal or "_TIR" for external segments.
+Split segments will be written to _TIR_split_tsplit_output.fasta_ with suffix "\_I" for internal or "\_TIR" for external segments.
 
 TIRs must be at least 10bp in length and share 80%
 identity and occur within 10bp of each end of the input element.
@@ -34,9 +34,9 @@ Output: `TIR_split_tsplit_output.fasta`
 
 ## tsplit LTR
 
-For each element in *LTR_retrotransposon.fa* split into internal and external segments.
+For each element in _LTR_retrotransposon.fa_ split into internal and external segments.
 
-Split segments will be written to *LTR_split_tsplit_output.fasta* with suffix "_I" for internal or "_LTR" for external segments.
+Split segments will be written to _LTR_split_tsplit_output.fasta_ with suffix "\_I" for internal or "\_LTR" for external segments.
 
 LTRs must be at least 10bp in length and share 80% identity and occur within 10bp of each end of the input element.
 
