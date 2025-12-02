@@ -8,6 +8,7 @@ from tsplit.parseAlign import filterCoordsFileTIR
 
 
 def test_filterCoordsFileTIR():
+    """Test the filterCoordsFileTIR function with a sample coords file."""
     # Create a temporary directory
     with tempfile.TemporaryDirectory() as tempdir:
         # Create a temporary coords file

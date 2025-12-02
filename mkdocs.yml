@@ -5,13 +5,10 @@ repo_name: adamtaranto/tSplit
 repo_url: https://github.com/adamtaranto/tSplit
 edit_uri: ""
 use_directory_urls: true
-
 nav:
   - Home: index.md
   - Getting Started: cli-docs/cli-tutorial.md
   - API Docs: api-docs/tSplit_API.md
-
-
 theme:
   name: material # material, readthedocs, mkdocs
   features:
@@ -20,7 +17,6 @@ theme:
     # - navigation.tabs
     - navigation.tabs.sticky
     - navigation.sections
-
 markdown_extensions:
   - pymdownx.highlight:
       anchor_linenums: true
@@ -31,7 +27,6 @@ markdown_extensions:
   - admonition
   - attr_list
   - md_in_html
-
 plugins:
   - search
   - mkdocs-jupyter:

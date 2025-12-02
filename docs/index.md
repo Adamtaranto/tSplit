@@ -10,9 +10,9 @@ Optionally, `tsplit TIR` can also compose synthetic MITES from complete DNA tran
 
 ## Table of contents
 
-* [Algorithm overview](#algorithm-overview)
-* [Options and usage](#options-and-usage)
-  * [Installing tSplit](#installing-tsplit)
+- [Algorithm overview](#algorithm-overview)
+- [Options and usage](#options-and-usage)
+  - [Installing tSplit](#installing-tsplit)
 
 ## Algorithm overview
 
@@ -20,13 +20,13 @@ tSplit attempts to identify terminal repeats in transposable elements by
 first aligning each element to itself using `blastn` or `nucmer`, and then applying a set of
 tuneable heuristics to select an alignment pair most likely to represent an LTR or TIR, as follows:
 
-  1. Exclude all diagonal/self-matches
-  2. If `tsplit LTR`: Retain only alignment pairs on the same strand (tandem repeats)
-  3. If `tsplit TIR`: Retain only alignment pairs on opposite strands (inverse repeats)
-  4. Retain pairs for which the 5' match begins within x bases of element start
-     and whose 3' match ends within x bases of element end
-  5. If multiple candidates remain select alignment pair with largest internal segment
-  (i.e. closest to element ends)
+1. Exclude all diagonal/self-matches
+2. If `tsplit LTR`: Retain only alignment pairs on the same strand (tandem repeats)
+3. If `tsplit TIR`: Retain only alignment pairs on opposite strands (inverse repeats)
+4. Retain pairs for which the 5' match begins within x bases of element start
+   and whose 3' match ends within x bases of element end
+5. If multiple candidates remain select alignment pair with largest internal segment
+   (i.e. closest to element ends)
 
 ## Options and usage
 
@@ -34,9 +34,9 @@ tuneable heuristics to select an alignment pair most likely to represent an LTR 
 
 Requirements:
 
-* [pymummer](https://pypi.python.org/pypi/pymummer) version >= 0.10.3 with wrapper for nucmer option *--diagfactor*.
-* [MUMmer](http://mummer.sourceforge.net/)
-* [BLAST+](ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/) (Optional)
+- [pymummer](https://pypi.python.org/pypi/pymummer) version >= 0.10.3 with wrapper for nucmer option _--diagfactor_.
+- [MUMmer](http://mummer.sourceforge.net/)
+- [BLAST+](ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/) (Optional)
 
 Installation options:
 
