@@ -101,6 +101,9 @@ ignore = [
     "B905", # `zip()` without an explicit `strict=` parameter
 ]
 
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["D"] # Ignore all pydocstyle rules in tests
+
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
 
