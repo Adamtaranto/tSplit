@@ -10,9 +10,7 @@ description = "Extract terminal repeats from retrotransposons (LTRs) or DNA tran
 readme = "README.md"
 requires-python = ">=3.8"
 license = { text = "MIT" }
-authors = [
-    { name = "Adam Taranto" }
-]
+authors = [{ name = "Adam Taranto" }]
 
 # Classifiers for project categorization
 classifiers = [
@@ -29,7 +27,22 @@ dynamic = ["version"]
 
 # Optional dependencies for testing
 [project.optional-dependencies]
-dev = ["hatch", "isort", "mkdocs-jupyter","mkdocs-material", "mkdocs", "mkdocstrings-python", "mkdocstrings", "notebook", "numpydoc-validation", "pre-commit", "pymdown-extensions", "pytest-cov", "pytest", "ruff"]
+dev = [
+    "hatch",
+    "isort",
+    "mkdocs-jupyter",
+    "mkdocs-material",
+    "mkdocs",
+    "mkdocstrings-python",
+    "mkdocstrings",
+    "notebook",
+    "numpydoc-validation",
+    "pre-commit",
+    "pymdown-extensions",
+    "pytest-cov",
+    "pytest",
+    "ruff",
+]
 
 # Project URLs
 [project.urls]
@@ -39,18 +52,14 @@ repository = "https://github.com/adamtaranto/tSplit"
 
 # Command-line script entry point
 [project.scripts]
-tsplit="tsplit.app_tsplit:main"
+tsplit = "tsplit.app_tsplit:main"
 
 # Hatch build configuration
 [tool.hatch.build]
 source = "src"
 
 # Exclude files and directories from the build
-exclude = [
-    "environment.yml",
-    ".github",
-    ".vscode",
-]
+exclude = ["environment.yml", ".github", ".vscode"]
 
 # Hatch versioning configuration
 [tool.hatch.version]
@@ -58,7 +67,7 @@ source = "vcs"
 
 # Version control system (VCS) versioning
 [tool.hatch.version.vcs]
-tag-pattern = "v*"  # Git tags starting with 'v' will be used for versioning
+tag-pattern = "v*"         # Git tags starting with 'v' will be used for versioning
 fallback-version = "0.0.0"
 
 # Version file location for VCS
@@ -77,19 +86,23 @@ fix = true
 
 [tool.ruff.lint]
 select = [
-    "C",  # mccabe rules
-    "F",  # pyflakes rules
-    "E",  # pycodestyle error rules
-    "W",  # pycodestyle warning rules
-    "B",  # flake8-bugbear rules
-    "I",  # isort rules
+    "C", # mccabe rules
+    "F", # pyflakes rules
+    "E", # pycodestyle error rules
+    "W", # pycodestyle warning rules
+    "B", # flake8-bugbear rules
+    "I", # isort rules
+    "D", # pydocstyle rules
 ]
 ignore = [
-    "C901",  # max-complexity-10
-    "E501",  # line-too-long
-    "I001",  # isort-imports
-    "B905",  # `zip()` without an explicit `strict=` parameter
+    "C901", # max-complexity-10
+    "E501", # line-too-long
+    #"I001",  # isort-imports
+    "B905", # `zip()` without an explicit `strict=` parameter
 ]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
 
 [tool.ruff.format]
 indent-style = "space"
@@ -97,7 +110,7 @@ quote-style = "single"
 
 [tool.isort]
 profile = "black"
-known_third_party = ["Bio","pymummer"]
+known_third_party = ["Bio", "pymummer"]
 known_first_party = ["tsplit"]
 default_section = "THIRDPARTY"
 force_sort_within_sections = true
@@ -110,13 +123,24 @@ checks = [
     "SA01", # or a see also section
     "SS06", # and don't require the summary to fit on one line
 ]
-exclude = [  # don't report on checks for these
+exclude = [ # don't report on checks for these
     '\.__init__$',
     '\.__repr__$',
     '\.__str__$',
 ]
-override_SS05 = [  # allow docstrings to start with these words
+override_SS05 = [ # allow docstrings to start with these words
     '^Process ',
     '^Assess ',
     '^Access ',
 ]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+
+[tool.pydocstyle]
+convention = "numpy"
+# Ignore files in directories named "tests"
+match-dir = "((?!tests).)*"
