@@ -12,9 +12,10 @@ The application supports two main commands:
 """
 
 import argparse
-from argparse import Namespace
 import sys
+from argparse import Namespace
 
+from tsplit._version import __version__
 from tsplit.cmd_LTR import main as ltr_main
 from tsplit.cmd_TIR import main as tir_main
 
@@ -34,6 +35,10 @@ def parse_args() -> Namespace:
     # Create the top-level parser with application description
     parser = argparse.ArgumentParser(
         description='Extract terminal repeats from retrotransposons (LTRs) or DNA transposons (TIRs).'
+    )
+    # Add version argument
+    parser.add_argument(
+        '--version', action='version', version=f'%(prog)s {__version__}'
     )
     # Require a subcommand (TIR or LTR)
     subparsers = parser.add_subparsers(dest='command', required=True)
