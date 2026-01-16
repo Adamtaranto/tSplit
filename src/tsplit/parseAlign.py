@@ -17,6 +17,7 @@ from typing import Generator, List, Optional
 
 from Bio import SeqIO
 from Bio.Align import PairwiseAligner
+from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 from pymummer import coords_file, nucmer
 
@@ -88,7 +89,7 @@ def getTIRs(
     -----
     When mites=True, the function will also yield synthetic MITEs constructed by
     joining the identified TIRs.
-    
+
     When both=True and report is in ['split', 'external', 'all'], both left and right
     TIRs will be yielded with suffixes '_L_TIR' and '_R_TIR'. The right TIR will be
     reverse complemented so it can be aligned with the left TIR.
@@ -224,7 +225,7 @@ def getTIRs(
                             # Left TIR
                             leftSeg = rec[ref_start : ref_end + 1]
                             # Remove gaps from the sequence
-                            leftSeg.seq = leftSeg.seq.ungap('-')
+                            leftSeg.seq = Seq(str(leftSeg.seq).replace('-', ''))
                             leftSeg.id = f'{leftSeg.id}_L_TIR'
                             leftSeg.name = leftSeg.id
                             leftSeg.description = f'[{rec.id} left TIR segment]'
@@ -236,7 +237,7 @@ def getTIRs(
                             # Right TIR - reverse complement so it aligns with left TIR
                             rightSeg = rec[qry_start : qry_end + 1]
                             # Remove gaps from the sequence
-                            rightSeg.seq = rightSeg.seq.ungap('-')
+                            rightSeg.seq = Seq(str(rightSeg.seq).replace('-', ''))
                             # Reverse complement the right TIR
                             rightSeg = rightSeg.reverse_complement(
                                 id=f'{rec.id}_R_TIR',
@@ -251,7 +252,7 @@ def getTIRs(
                             # yield TIR slice - append "_TIR"
                             extSeg = rec[ref_start : ref_end + 1]  # +1 to include end base
                             # Remove gaps from the sequence
-                            extSeg.seq = extSeg.seq.ungap('-')
+                            extSeg.seq = Seq(str(extSeg.seq).replace('-', ''))
                             extSeg.id = f'{extSeg.id}_TIR'
                             extSeg.name = extSeg.id
                             extSeg.description = f'[{rec.id} TIR segment]'
@@ -452,7 +453,7 @@ def getLTRs(
         - 'external': Only LTRs
         - 'internal': Only internal regions
         - 'all': Original sequences plus all segments
-        
+
     Notes
     -----
     When both=True and report is in ['split', 'external', 'all'], both left and right
@@ -573,7 +574,7 @@ def getLTRs(
                             # Left LTR
                             leftSeg = rec[ref_start : ref_end + 1]
                             # Remove gaps from the sequence
-                            leftSeg.seq = leftSeg.seq.ungap('-')
+                            leftSeg.seq = Seq(str(leftSeg.seq).replace('-', ''))
                             leftSeg.id = f'{leftSeg.id}_L_LTR'
                             leftSeg.name = leftSeg.id
                             leftSeg.description = f'[{rec.id} left LTR segment]'
@@ -585,7 +586,7 @@ def getLTRs(
                             # Right LTR - keep in same orientation (do NOT reverse complement)
                             rightSeg = rec[qry_start : qry_end + 1]
                             # Remove gaps from the sequence
-                            rightSeg.seq = rightSeg.seq.ungap('-')
+                            rightSeg.seq = Seq(str(rightSeg.seq).replace('-', ''))
                             rightSeg.id = f'{rightSeg.id}_R_LTR'
                             rightSeg.name = rightSeg.id
                             rightSeg.description = f'[{rec.id} right LTR segment]'
@@ -597,7 +598,7 @@ def getLTRs(
                             # yield LTR slice - append "_LTR"
                             extSeg = rec[ref_start : ref_end + 1]  # +1 to include end base
                             # Remove gaps from the sequence
-                            extSeg.seq = extSeg.seq.ungap('-')
+                            extSeg.seq = Seq(str(extSeg.seq).replace('-', ''))
                             extSeg.id = f'{extSeg.id}_LTR'
                             extSeg.name = extSeg.id
                             extSeg.description = f'[{rec.id} LTR segment]'
