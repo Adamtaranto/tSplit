@@ -224,8 +224,6 @@ def getTIRs(
                             # Yield both left and right TIRs
                             # Left TIR
                             leftSeg = rec[ref_start : ref_end + 1]
-                            # Remove gaps from the sequence
-                            leftSeg.seq = Seq(str(leftSeg.seq).replace('-', ''))
                             leftSeg.id = f'{leftSeg.id}_L_TIR'
                             leftSeg.name = leftSeg.id
                             leftSeg.description = f'[{rec.id} left TIR segment]'
@@ -236,8 +234,6 @@ def getTIRs(
 
                             # Right TIR - reverse complement so it aligns with left TIR
                             rightSeg = rec[qry_start : qry_end + 1]
-                            # Remove gaps from the sequence
-                            rightSeg.seq = Seq(str(rightSeg.seq).replace('-', ''))
                             # Reverse complement the right TIR
                             rightSeg = rightSeg.reverse_complement(
                                 id=f'{rec.id}_R_TIR',
@@ -250,9 +246,9 @@ def getTIRs(
                             yield rightSeg
                         else:
                             # yield TIR slice - append "_TIR"
-                            extSeg = rec[ref_start : ref_end + 1]  # +1 to include end base
-                            # Remove gaps from the sequence
-                            extSeg.seq = Seq(str(extSeg.seq).replace('-', ''))
+                            extSeg = rec[
+                                ref_start : ref_end + 1
+                            ]  # +1 to include end base
                             extSeg.id = f'{extSeg.id}_TIR'
                             extSeg.name = extSeg.id
                             extSeg.description = f'[{rec.id} TIR segment]'
@@ -573,8 +569,6 @@ def getLTRs(
                             # Yield both left and right LTRs
                             # Left LTR
                             leftSeg = rec[ref_start : ref_end + 1]
-                            # Remove gaps from the sequence
-                            leftSeg.seq = Seq(str(leftSeg.seq).replace('-', ''))
                             leftSeg.id = f'{leftSeg.id}_L_LTR'
                             leftSeg.name = leftSeg.id
                             leftSeg.description = f'[{rec.id} left LTR segment]'
@@ -585,8 +579,6 @@ def getLTRs(
 
                             # Right LTR - keep in same orientation (do NOT reverse complement)
                             rightSeg = rec[qry_start : qry_end + 1]
-                            # Remove gaps from the sequence
-                            rightSeg.seq = Seq(str(rightSeg.seq).replace('-', ''))
                             rightSeg.id = f'{rightSeg.id}_R_LTR'
                             rightSeg.name = rightSeg.id
                             rightSeg.description = f'[{rec.id} right LTR segment]'
@@ -596,9 +588,9 @@ def getLTRs(
                             yield rightSeg
                         else:
                             # yield LTR slice - append "_LTR"
-                            extSeg = rec[ref_start : ref_end + 1]  # +1 to include end base
-                            # Remove gaps from the sequence
-                            extSeg.seq = Seq(str(extSeg.seq).replace('-', ''))
+                            extSeg = rec[
+                                ref_start : ref_end + 1
+                            ]  # +1 to include end base
                             extSeg.id = f'{extSeg.id}_LTR'
                             extSeg.name = extSeg.id
                             extSeg.description = f'[{rec.id} LTR segment]'
