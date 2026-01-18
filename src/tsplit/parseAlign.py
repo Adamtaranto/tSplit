@@ -17,7 +17,6 @@ from typing import Generator, List, Optional
 
 from Bio import SeqIO
 from Bio.Align import PairwiseAligner
-from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 from pymummer import coords_file, nucmer
 
