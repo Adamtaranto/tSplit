@@ -83,6 +83,7 @@ def main(args: Optional[Namespace] = None) -> None:
         alignTool=args.method,  # Alignment tool (blastn or nucmer)
         temp=args.outdir,  # Directory for temporary files
         keeptemp=args.keeptemp,  # Whether to keep temporary files
+        both=args.both,  # Whether to report both terminal repeats
     )
 
     # Write the identified segments to output file

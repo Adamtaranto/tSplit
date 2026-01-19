@@ -37,6 +37,7 @@ def getTIRs(
     keeptemp: bool = False,
     alignTool: str = 'nucmer',
     verbose: bool = True,
+    both: bool = False,
 ) -> Generator[SeqRecord, None, None]:
     """
     Align elements to self and attempt to identify TIRs.
@@ -71,6 +72,8 @@ def getTIRs(
         Alignment tool to use ('nucmer' or 'blastn'), by default 'nucmer'.
     verbose : bool, optional
         Whether to print verbose output, by default True.
+    both : bool, optional
+        Whether to report both left and right terminal repeats, by default False.
 
     Yields
     ------
@@ -85,6 +88,10 @@ def getTIRs(
     -----
     When mites=True, the function will also yield synthetic MITEs constructed by
     joining the identified TIRs.
+
+    When both=True and report is in ['split', 'external', 'all'], both left and right
+    TIRs will be yielded with suffixes '_L_TIR' and '_R_TIR'. The right TIR will be
+    reverse complemented so it can be aligned with the left TIR.
     """
     # Set temp directory to cwd if none is provided
     if not temp:
@@ -212,15 +219,42 @@ def getTIRs(
                         print(pairwise_alignments[0])
 
                     if report in ['split', 'external', 'all']:
-                        # yield TIR slice - append "_TIR"
-                        extSeg = rec[ref_start : ref_end + 1]  # +1 to include end base
-                        extSeg.id = f'{extSeg.id}_TIR'
-                        extSeg.name = extSeg.id
-                        extSeg.description = f'[{rec.id} TIR segment]'
-                        logging.info(
-                            f'Yielding TIR segment: {extSeg.id}, len: {len(extSeg)}bp'
-                        )
-                        yield extSeg
+                        if both:
+                            # Yield both left and right TIRs
+                            # Left TIR
+                            leftSeg = rec[ref_start : ref_end + 1]
+                            leftSeg.id = f'{leftSeg.id}_L_TIR'
+                            leftSeg.name = leftSeg.id
+                            leftSeg.description = f'[{rec.id} left TIR segment]'
+                            logging.info(
+                                f'Yielding left TIR segment: {leftSeg.id}, len: {len(leftSeg)}bp'
+                            )
+                            yield leftSeg
+
+                            # Right TIR - reverse complement so it aligns with left TIR
+                            rightSeg = rec[qry_start : qry_end + 1]
+                            # Reverse complement the right TIR
+                            rightSeg = rightSeg.reverse_complement(
+                                id=f'{rec.id}_R_TIR',
+                                name=f'{rec.id}_R_TIR',
+                                description=f'[{rec.id} right TIR segment, reverse complemented]',
+                            )
+                            logging.info(
+                                f'Yielding right TIR segment (reverse complemented): {rightSeg.id}, len: {len(rightSeg)}bp'
+                            )
+                            yield rightSeg
+                        else:
+                            # yield TIR slice - append "_TIR"
+                            extSeg = rec[
+                                ref_start : ref_end + 1
+                            ]  # +1 to include end base
+                            extSeg.id = f'{extSeg.id}_TIR'
+                            extSeg.name = extSeg.id
+                            extSeg.description = f'[{rec.id} TIR segment]'
+                            logging.info(
+                                f'Yielding TIR segment: {extSeg.id}, len: {len(extSeg)}bp'
+                            )
+                            yield extSeg
 
                     if report in ['split', 'internal', 'all']:
                         # yield internal slice - append "_I"
@@ -371,6 +405,7 @@ def getLTRs(
     keeptemp: bool = False,
     alignTool: str = 'nucmer',
     verbose: bool = True,
+    both: bool = False,
 ) -> Generator[SeqRecord, None, None]:
     """
     Align elements to self and attempt to identify LTRs.
@@ -402,6 +437,8 @@ def getLTRs(
         Alignment tool to use ('nucmer' or 'blastn'), by default 'nucmer'.
     verbose : bool, optional
         Whether to print verbose output, by default True.
+    both : bool, optional
+        Whether to report both left and right terminal repeats, by default False.
 
     Yields
     ------
@@ -411,6 +448,13 @@ def getLTRs(
         - 'external': Only LTRs
         - 'internal': Only internal regions
         - 'all': Original sequences plus all segments
+
+    Notes
+    -----
+    When both=True and report is in ['split', 'external', 'all'], both left and right
+    LTRs will be yielded with suffixes '_L_LTR' and '_R_LTR'. Unlike TIRs, the right
+    LTR will NOT be reverse complemented as it is already in the same orientation as
+    the left LTR.
     """
     # Set temp directory to cwd if none is provided
     if not temp:
@@ -520,15 +564,39 @@ def getLTRs(
                         print(pairwise_alignments[0])
 
                     if report in ['split', 'external', 'all']:
-                        # yield LTR slice - append "_LTR"
-                        extSeg = rec[ref_start : ref_end + 1]  # +1 to include end base
-                        extSeg.id = f'{extSeg.id}_LTR'
-                        extSeg.name = extSeg.id
-                        extSeg.description = f'[{rec.id} LTR segment]'
-                        logging.info(
-                            f'Yielding LTR segment: {extSeg.id}, len: {len(extSeg)}bp'
-                        )
-                        yield extSeg
+                        if both:
+                            # Yield both left and right LTRs
+                            # Left LTR
+                            leftSeg = rec[ref_start : ref_end + 1]
+                            leftSeg.id = f'{leftSeg.id}_L_LTR'
+                            leftSeg.name = leftSeg.id
+                            leftSeg.description = f'[{rec.id} left LTR segment]'
+                            logging.info(
+                                f'Yielding left LTR segment: {leftSeg.id}, len: {len(leftSeg)}bp'
+                            )
+                            yield leftSeg
+
+                            # Right LTR - keep in same orientation (do NOT reverse complement)
+                            rightSeg = rec[qry_start : qry_end + 1]
+                            rightSeg.id = f'{rightSeg.id}_R_LTR'
+                            rightSeg.name = rightSeg.id
+                            rightSeg.description = f'[{rec.id} right LTR segment]'
+                            logging.info(
+                                f'Yielding right LTR segment: {rightSeg.id}, len: {len(rightSeg)}bp'
+                            )
+                            yield rightSeg
+                        else:
+                            # yield LTR slice - append "_LTR"
+                            extSeg = rec[
+                                ref_start : ref_end + 1
+                            ]  # +1 to include end base
+                            extSeg.id = f'{extSeg.id}_LTR'
+                            extSeg.name = extSeg.id
+                            extSeg.description = f'[{rec.id} LTR segment]'
+                            logging.info(
+                                f'Yielding LTR segment: {extSeg.id}, len: {len(extSeg)}bp'
+                            )
+                            yield extSeg
 
                     if report in ['split', 'internal', 'all']:
                         # yield internal slice - append "_I"
