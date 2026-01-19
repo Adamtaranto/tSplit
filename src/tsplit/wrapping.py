@@ -6,9 +6,9 @@ and constructing specific command strings for tools like BLASTN.
 """
 
 import logging
+from shlex import quote
 import subprocess
 import sys
-from shlex import quote
 from typing import Optional
 
 
