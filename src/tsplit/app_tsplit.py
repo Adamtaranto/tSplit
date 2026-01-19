@@ -130,6 +130,12 @@ def parse_args() -> Namespace:
         choices=['blastn', 'nucmer'],
         help='Select alignment method: "blastn" or "nucmer".(Default: blastn)',
     )
+    tir_parser.add_argument(
+        '--both',
+        action='store_true',
+        default=False,
+        help='Report both left and right terminal repeats when splitmode is one of {all, split, external}. Suffixes will be "_L_TIR" and "_R_TIR". Right TIR will be reverse complemented for alignment with left TIR.',
+    )
 
     # Set up parser for LTR subcommand
     ltr_parser = subparsers.add_parser(
@@ -211,6 +217,12 @@ def parse_args() -> Namespace:
         default='blastn',
         choices=['blastn', 'nucmer'],
         help='Select alignment method: "blastn" or "nucmer".(Default: blastn)',
+    )
+    ltr_parser.add_argument(
+        '--both',
+        action='store_true',
+        default=False,
+        help='Report both left and right terminal repeats when splitmode is one of {all, split, external}. Suffixes will be "_L_LTR" and "_R_LTR". Right LTR will be in the same orientation as left LTR.',
     )
 
     # Parse and return the command-line arguments

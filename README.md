@@ -80,13 +80,13 @@ Split segments will be written to _TIR_split_tsplit_output.fasta_ with suffix "\
 TIRs must be at least 10bp in length and share 80%
 identity and occur within 10bp of each end of the input element.
 
-Additionally, synthetic MITEs will be constructed by concatenation of left and right TIRs, with internal segments excised.
 
 ```bash
-tsplit TIR -i tests/data/TIR_element.fa -p TIR_split --makemites --keeptemp
+tsplit TIR -i tests/data/TIR_element.fa -p TIR_split
 
 # Equivalet to defaults
-tsplit TIR -i tests/data/TIR_element.fa -p TIR_split --maxdist 10 --minid 80.0 --minterm 10 --method blastn --splitmode split --makemites --keeptemp
+tsplit TIR -i tests/data/TIR_element.fa -p TIR_split --maxdist 10 --minid 80.0 --minterm 10 --method blastn --splitmode split
+# Use '--both' if you want to report both left and right TIRs
 ```
 
 Output: `TIR_split_tsplit_output.fasta`

@@ -9,7 +9,7 @@ name = "tsplit"
 description = "Extract terminal repeats from retrotransposons (LTRs) or DNA transposons (TIRs). Compose synthetic MITES from complete DNA transposons."
 readme = "README.md"
 requires-python = ">=3.8"
-license = { text = "MIT" }
+license = { text = "GPL-3.0-or-later" }
 authors = [{ name = "Adam Taranto" }]
 
 # Classifiers for project categorization
@@ -35,9 +35,11 @@ dev = [
     "mkdocs",
     "mkdocstrings-python",
     "mkdocstrings",
+    "mypy",
     "notebook",
     "numpydoc-validation",
     "pre-commit",
+    "pydocstyle",
     "pymdown-extensions",
     "pytest-cov",
     "pytest",
@@ -101,6 +103,9 @@ ignore = [
     "B905", # `zip()` without an explicit `strict=` parameter
 ]
 
+# Don't auto-fix docstring issues - they're too fragile
+unfixable = ["D"]
+
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["D"] # Ignore all pydocstyle rules in tests
 
@@ -137,6 +142,11 @@ override_SS05 = [ # allow docstrings to start with these words
     '^Access ',
 ]
 
+# Don't process filepaths that match these regex patterns
+exclude_files = [
+    '^_version\\.py$',
+]
+
 [tool.mypy]
 python_version = "3.10"
 warn_return_any = true
@@ -145,5 +155,5 @@ disallow_untyped_defs = true
 
 [tool.pydocstyle]
 convention = "numpy"
-# Ignore files in directories named "tests"
-match-dir = "((?!tests).)*"
+match-dir = "[^\\.].*"     # matches all dirs that don't start with a dot
+match = "(?!test_).*\\.py" # matches files that don't start with 'test_' but end with '.py'
