@@ -246,16 +246,19 @@ def write_paf(alignment_data: List[dict], outfile: str) -> None:
     PAF format specification:
     1. Query sequence name
     2. Query sequence length
-    3. Query start (0-based)
-    4. Query end (0-based)
+    3. Query start (0-based, inclusive)
+    4. Query end (0-based, exclusive)
     5. Relative strand: "+" or "-"
     6. Target sequence name
     7. Target sequence length
-    8. Target start on original strand (0-based)
-    9. Target end on original strand (0-based)
+    8. Target start on original strand (0-based, inclusive)
+    9. Target end on original strand (0-based, exclusive)
     10. Number of matching bases
     11. Alignment block length
     12. Mapping quality (0-255; 255 for missing)
+
+    Positions use half-open intervals [start, end) where start is inclusive
+    and end is exclusive (0-based coordinates).
     """
     logging.info(f'Writing PAF output to: {outfile}')
     with open(outfile, 'w') as f:
