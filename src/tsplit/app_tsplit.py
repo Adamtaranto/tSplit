@@ -107,6 +107,12 @@ def parse_args() -> Namespace:
         help='Minimum percentage identity between terminal repeat pairs. As float. (Default: 80.0)',
     )
     tir_parser.add_argument(
+        '--blast_evalue',
+        type=float,
+        default=1e-3,
+        help='Expectation value (E-value) threshold for saving hits in BLAST. (Default: 1e-3)',
+    )
+    tir_parser.add_argument(
         '--minterm',
         type=int,
         default=10,
@@ -135,6 +141,18 @@ def parse_args() -> Namespace:
         action='store_true',
         default=False,
         help='Report both left and right terminal repeats when splitmode is one of {all, split, external}. Suffixes will be "_L_TIR" and "_R_TIR". Right TIR will be reverse complemented for alignment with left TIR.',
+    )
+    tir_parser.add_argument(
+        '--paf',
+        action='store_true',
+        default=False,
+        help='Write all alignments in PAF (Pairwise mApping Format). Output file will be named using prefix.',
+    )
+    tir_parser.add_argument(
+        '--gff',
+        action='store_true',
+        default=False,
+        help='Write the best terminal repeats (TIRs) as GFF3 features. Output file will be named using prefix.',
     )
 
     # Set up parser for LTR subcommand
@@ -195,6 +213,12 @@ def parse_args() -> Namespace:
         help='Minimum percentage identity between terminal repeat pairs. As float. (Default: 80.0)',
     )
     ltr_parser.add_argument(
+        '--blast_evalue',
+        type=float,
+        default=1e-3,
+        help='Expectation value (E-value) threshold for saving hits in BLAST. (Default: 1e-3)',
+    )
+    ltr_parser.add_argument(
         '--minterm',
         type=int,
         default=10,
@@ -223,6 +247,18 @@ def parse_args() -> Namespace:
         action='store_true',
         default=False,
         help='Report both left and right terminal repeats when splitmode is one of {all, split, external}. Suffixes will be "_L_LTR" and "_R_LTR". Right LTR will be in the same orientation as left LTR.',
+    )
+    ltr_parser.add_argument(
+        '--paf',
+        action='store_true',
+        default=False,
+        help='Write all alignments in PAF (Pairwise mApping Format). Output file will be named using prefix.',
+    )
+    ltr_parser.add_argument(
+        '--gff',
+        action='store_true',
+        default=False,
+        help='Write the best terminal repeats (LTRs) as GFF3 features. Output file will be named using prefix.',
     )
 
     # Parse and return the command-line arguments
