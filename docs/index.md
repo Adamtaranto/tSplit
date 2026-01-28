@@ -14,7 +14,6 @@ Optionally, `tsplit TIR` can also compose synthetic MITES from complete DNA tran
 - [Algorithm overview](#algorithm-overview)
 - [Options and usage](#options-and-usage)
   - [Installing tSplit](#installing-tsplit)
-  - [Example usage](#example-usage)
 
 ## Algorithm overview
 
@@ -30,15 +29,23 @@ tuneable heuristics to select an alignment pair most likely to represent an LTR 
 5. If multiple candidates remain select alignment pair with largest internal segment
    (i.e. closest to element ends)
 
-## Options and usage
-
-### Installing tSplit
+## Installing tSplit
 
 Requirements:
 
 - [pymummer](https://pypi.python.org/pypi/pymummer) version >= 0.10.3 with wrapper for nucmer option _--diagfactor_.
-- [MUMmer](http://mummer.sourceforge.net/)
-- [BLAST+](ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/) (Optional)
+- [MUMmer4](https://github.com/mummer4/mummer)
+- [BLAST+](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/) (Optional)
+
+You can create a Conda environment with these dependencies using the YAML file in this repo.
+
+```bash
+conda env create -f environment.yml
+
+conda activate tsplit
+```
+
+After activating the tsplit environment you can use pip to install the latest version of tsplit.
 
 Installation options:
 
@@ -56,53 +63,3 @@ This is the best way to ensure you have the latest development version.
 ```bash
 pip install git+https://github.com/Adamtaranto/tSplit.git
 ```
-
-3. Clone from this repository and install as a local Python package.
-
-Do this if you want to edit the code.
-
-```bash
-git clone https://github.com/Adamtaranto/tSplit.git && cd tSplit && pip install -e '.[dev]'
-```
-
-### Example usage
-
-tSplit can be run in two modes: `tsplit LTR` and `tsplit TIR`, for extracting long terminal repeats or terminal inverted repeats, respectively.
-
-Options are the same for each.
-
-### tsplit TIR
-
-For each element in _TIR_element.fa_ split into internal and external (TIR) segments.
-
-Split segments will be written to _TIR_split_tsplit_output.fasta_ with suffix "\_I" for internal or "\_TIR" for external segments.
-
-TIRs must be at least 10bp in length and share 80%
-identity and occur within 10bp of each end of the input element.
-
-```bash
-tsplit TIR -i tests/data/TIR_element.fa -d results -p TIR_split
-
-# Equivalet to defaults
-tsplit TIR -i tests/data/TIR_element.fa -d results -p TIR_split --method blastn --maxdist 10 --minid 80.0 --minterm 10 --blast_evalue 0.001 --method blastn --splitmode split
-```
-
-Output: `results/TIR_split_tsplit_output.fasta`
-
-### tsplit LTR
-
-For each element in _LTR_retrotransposon.fa_ split into internal and external segments.
-
-Split segments will be written to _LTR_split_tsplit_output.fasta_ with suffix "\_I" for internal or "\_LTR" for external segments.
-
-LTRs must be at least 10bp in length and share 80% identity and occur within 10bp of each end of the input element.
-
-```bash
-tsplit LTR -i tests/data/LTR_retrotransposon.fa -p LTR_split
-```
-
-Output: LTR_split_tsplit_output.fasta
-
-## License
-
-Software provided under GPL-3 license.
