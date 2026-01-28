@@ -842,6 +842,45 @@ def getTIRs_with_data(
                 tempCoords, rec, minterm=minterm, flankdist=flankdist
             )
 
+            # Collect ALL alignment data for PAF if requested (before filtering)
+            if collect_alignments:
+                # Read all alignments from coords file (excluding self-hits)
+                file_reader = coords_file.reader(tempCoords)
+                all_alignments = [hit for hit in file_reader if not hit.is_self_hit()]
+
+                # Add all non-self alignments to PAF output
+                for aln in all_alignments:
+                    # Get coordinates from alignment
+                    aln_ref_start = aln.ref_coords().start
+                    aln_ref_end = aln.ref_coords().end
+                    aln_qry_start = aln.qry_coords().start
+                    aln_qry_end = aln.qry_coords().end
+
+                    # Calculate strand
+                    strand = '-' if not aln.on_same_strand() else '+'
+
+                    # Calculate number of matches from percent identity
+                    num_matches = int(
+                        aln.hit_length_ref * aln.percent_identity / 100.0
+                    )
+
+                    alignment_data.append(
+                        {
+                            'qry_name': rec.id,
+                            'qry_length': len(rec),
+                            'qry_start': aln_qry_start,
+                            'qry_end': aln_qry_end + 1,  # PAF uses end-exclusive
+                            'strand': strand,
+                            'ref_name': rec.id,
+                            'ref_length': len(rec),
+                            'ref_start': aln_ref_start,
+                            'ref_end': aln_ref_end + 1,  # PAF uses end-exclusive
+                            'num_matches': num_matches,
+                            'aln_block_length': aln.hit_length_ref,
+                            'mapping_quality': 255,  # Not available, use 255 (missing)
+                        }
+                    )
+
             # If alignments exist, collect data and generate segments
             if alignments:
                 # Get coordinates from best alignment (first in sorted list)
@@ -850,33 +889,6 @@ def getTIRs_with_data(
                 ref_end = best_aln.ref_coords().end
                 qry_start = best_aln.qry_coords().start
                 qry_end = best_aln.qry_coords().end
-
-                # Collect alignment data for PAF if requested
-                if collect_alignments:
-                    # Calculate strand: TIRs are on opposite strands
-                    strand = '-' if not best_aln.on_same_strand() else '+'
-
-                    # Calculate number of matches from percent identity
-                    num_matches = int(
-                        best_aln.hit_length_ref * best_aln.percent_identity / 100.0
-                    )
-
-                    alignment_data.append(
-                        {
-                            'qry_name': rec.id,
-                            'qry_length': len(rec),
-                            'qry_start': qry_start,
-                            'qry_end': qry_end + 1,  # PAF uses end-exclusive
-                            'strand': strand,
-                            'ref_name': rec.id,
-                            'ref_length': len(rec),
-                            'ref_start': ref_start,
-                            'ref_end': ref_end + 1,  # PAF uses end-exclusive
-                            'num_matches': num_matches,
-                            'aln_block_length': best_aln.hit_length_ref,
-                            'mapping_quality': 255,  # Not available, use 255 (missing)
-                        }
-                    )
 
                 # Collect feature data for GFF3 if requested
                 if collect_features:
@@ -1093,6 +1105,45 @@ def getLTRs_with_data(
                 tempCoords, rec, minterm=minterm, flankdist=flankdist
             )
 
+            # Collect ALL alignment data for PAF if requested (before filtering)
+            if collect_alignments:
+                # Read all alignments from coords file (excluding self-hits)
+                file_reader = coords_file.reader(tempCoords)
+                all_alignments = [hit for hit in file_reader if not hit.is_self_hit()]
+
+                # Add all non-self alignments to PAF output
+                for aln in all_alignments:
+                    # Get coordinates from alignment
+                    aln_ref_start = aln.ref_coords().start
+                    aln_ref_end = aln.ref_coords().end
+                    aln_qry_start = aln.qry_coords().start
+                    aln_qry_end = aln.qry_coords().end
+
+                    # Calculate strand
+                    strand = '+' if aln.on_same_strand() else '-'
+
+                    # Calculate number of matches from percent identity
+                    num_matches = int(
+                        aln.hit_length_ref * aln.percent_identity / 100.0
+                    )
+
+                    alignment_data.append(
+                        {
+                            'qry_name': rec.id,
+                            'qry_length': len(rec),
+                            'qry_start': aln_qry_start,
+                            'qry_end': aln_qry_end + 1,  # PAF uses end-exclusive
+                            'strand': strand,
+                            'ref_name': rec.id,
+                            'ref_length': len(rec),
+                            'ref_start': aln_ref_start,
+                            'ref_end': aln_ref_end + 1,  # PAF uses end-exclusive
+                            'num_matches': num_matches,
+                            'aln_block_length': aln.hit_length_ref,
+                            'mapping_quality': 255,  # Not available, use 255 (missing)
+                        }
+                    )
+
             # If alignments exist, collect data and generate segments
             if alignments:
                 # Get coordinates from best alignment (first in sorted list)
@@ -1101,33 +1152,6 @@ def getLTRs_with_data(
                 ref_end = best_aln.ref_coords().end
                 qry_start = best_aln.qry_coords().start
                 qry_end = best_aln.qry_coords().end
-
-                # Collect alignment data for PAF if requested
-                if collect_alignments:
-                    # LTRs are on the same strand
-                    strand = '+' if best_aln.on_same_strand() else '-'
-
-                    # Calculate number of matches from percent identity
-                    num_matches = int(
-                        best_aln.hit_length_ref * best_aln.percent_identity / 100.0
-                    )
-
-                    alignment_data.append(
-                        {
-                            'qry_name': rec.id,
-                            'qry_length': len(rec),
-                            'qry_start': qry_start,
-                            'qry_end': qry_end + 1,  # PAF uses end-exclusive
-                            'strand': strand,
-                            'ref_name': rec.id,
-                            'ref_length': len(rec),
-                            'ref_start': ref_start,
-                            'ref_end': ref_end + 1,  # PAF uses end-exclusive
-                            'num_matches': num_matches,
-                            'aln_block_length': best_aln.hit_length_ref,
-                            'mapping_quality': 255,  # Not available, use 255 (missing)
-                        }
-                    )
 
                 # Collect feature data for GFF3 if requested
                 if collect_features:

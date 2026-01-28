@@ -138,15 +138,15 @@ def parse_args() -> Namespace:
     )
     tir_parser.add_argument(
         '--paf',
-        type=str,
-        default=None,
-        help='Write alignments in PAF (Pairwise mApping Format) to this file.',
+        action='store_true',
+        default=False,
+        help='Write all alignments in PAF (Pairwise mApping Format). Output file will be named using prefix.',
     )
     tir_parser.add_argument(
         '--gff',
-        type=str,
-        default=None,
-        help='Write the best terminal repeats (TIRs) as GFF3 features to this file.',
+        action='store_true',
+        default=False,
+        help='Write the best terminal repeats (TIRs) as GFF3 features. Output file will be named using prefix.',
     )
 
     # Set up parser for LTR subcommand
@@ -238,15 +238,15 @@ def parse_args() -> Namespace:
     )
     ltr_parser.add_argument(
         '--paf',
-        type=str,
-        default=None,
-        help='Write alignments in PAF (Pairwise mApping Format) to this file.',
+        action='store_true',
+        default=False,
+        help='Write all alignments in PAF (Pairwise mApping Format). Output file will be named using prefix.',
     )
     ltr_parser.add_argument(
         '--gff',
-        type=str,
-        default=None,
-        help='Write the best terminal repeats (LTRs) as GFF3 features to this file.',
+        action='store_true',
+        default=False,
+        help='Write the best terminal repeats (LTRs) as GFF3 features. Output file will be named using prefix.',
     )
 
     # Parse and return the command-line arguments

@@ -11,6 +11,7 @@ sequences and identify terminal repeats that occur in the same orientation
 (characteristic of LTRs in retrotransposons).
 """
 
+import os
 from argparse import Namespace
 from typing import Optional
 
@@ -18,7 +19,6 @@ from tsplit.logs import init_logging
 from tsplit.parseAlign import getLTRs, getLTRs_with_data
 from tsplit.utils import (
     check_tools,
-    resolve_output_path,
     segWrite,
     tSplitchecks,
     write_gff3,
@@ -73,13 +73,26 @@ def main(args: Optional[Namespace] = None) -> None:
     # Create output directories and validate input files
     outpath = tSplitchecks(args)
 
-    # Resolve PAF and GFF paths considering outdir option
-    paf_path = resolve_output_path(args.paf, args.outdir)
-    gff_path = resolve_output_path(args.gff, args.outdir)
+    # Generate PAF and GFF paths from prefix if flags are set
+    paf_path = None
+    gff_path = None
+
+    if args.paf or args.gff:
+        # Extract directory and prefix from outpath
+        outdir = os.path.dirname(outpath)
+        prefix = os.path.splitext(os.path.basename(outpath))[0]
+        # Remove the '_tsplit_output' suffix if present
+        if prefix.endswith('_tsplit_output'):
+            prefix = prefix[:-14]  # len('_tsplit_output') = 14
+
+        if args.paf:
+            paf_path = os.path.join(outdir, f'{prefix}.paf')
+        if args.gff:
+            gff_path = os.path.join(outdir, f'{prefix}.gff3')
 
     # Determine if we need to collect alignment or feature data
-    collect_alignments = paf_path is not None
-    collect_features = gff_path is not None
+    collect_alignments = args.paf
+    collect_features = args.gff
 
     # Run LTR identification analysis
     # This searches for terminal repeats on the same strand (characteristic of LTRs)
