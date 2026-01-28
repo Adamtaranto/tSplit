@@ -12,8 +12,8 @@ The application supports two main commands:
 """
 
 import argparse
-import sys
 from argparse import Namespace
+import sys
 
 from tsplit._version import __version__
 from tsplit.cmd_LTR import main as ltr_main
@@ -105,6 +105,12 @@ def parse_args() -> Namespace:
         type=float,
         default=80.0,
         help='Minimum percentage identity between terminal repeat pairs. As float. (Default: 80.0)',
+    )
+    tir_parser.add_argument(
+        '--blast_evalue',
+        type=float,
+        default=1e-3,
+        help='Expectation value (E-value) threshold for saving hits in BLAST. (Default: 1e-3)',
     )
     tir_parser.add_argument(
         '--minterm',
@@ -205,6 +211,12 @@ def parse_args() -> Namespace:
         type=float,
         default=80.0,
         help='Minimum percentage identity between terminal repeat pairs. As float. (Default: 80.0)',
+    )
+    ltr_parser.add_argument(
+        '--blast_evalue',
+        type=float,
+        default=1e-3,
+        help='Expectation value (E-value) threshold for saving hits in BLAST. (Default: 1e-3)',
     )
     ltr_parser.add_argument(
         '--minterm',

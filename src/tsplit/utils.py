@@ -16,7 +16,9 @@ from Bio import SeqIO
 from Bio.SeqRecord import SeqRecord
 
 
-def resolve_output_path(filepath: Optional[str], outdir: Optional[str]) -> Optional[str]:
+def resolve_output_path(
+    filepath: Optional[str], outdir: Optional[str]
+) -> Optional[str]:
     """
     Resolve output file path considering the outdir option.
 

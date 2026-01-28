@@ -6,9 +6,9 @@ and constructing specific command strings for tools like BLASTN.
 """
 
 import logging
+from shlex import quote
 import subprocess
 import sys
-from shlex import quote
 from typing import Optional
 
 
@@ -60,7 +60,11 @@ def run_cmd(
 
 
 def makeBlast(
-    seq: Optional[str] = None, outfile: Optional[str] = None, pid: int = 60
+    seq: Optional[str] = None,
+    outfile: Optional[str] = None,
+    pid: float = 60,
+    max_target_seqs: int = 10000,
+    evalue: float = 0.001,
 ) -> str:
     """
     Construct the blastn command.
@@ -76,6 +80,10 @@ def makeBlast(
         Path where the BLAST results will be saved.
     pid : int, optional
         Minimum percent identity threshold. Default is 60.
+    max_target_seqs : int, optional
+        Maximum number of target sequences to keep. Default is 10000.
+    evalue : float, optional
+        Expectation value (E-value) threshold for saving hits. Default is 0.001.
 
     Returns
     -------
@@ -110,5 +118,9 @@ def makeBlast(
         + quote(str(outfile))
         + ' -perc_identity '
         + str(pid)
+        + ' -max_target_seqs '
+        + str(max_target_seqs)
+        + ' -evalue '
+        + str(evalue)
     )
     return cmd

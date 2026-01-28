@@ -12,8 +12,8 @@ sequences and identify terminal repeats that occur in opposite orientations
 synthetic Miniature Inverted-repeat Transposable Elements (MITEs).
 """
 
-import os
 from argparse import Namespace
+import os
 from typing import Optional
 
 from tsplit.logs import init_logging
@@ -107,6 +107,7 @@ def main(args: Optional[Namespace] = None) -> None:
             minterm=args.minterm,  # Minimum length of terminal repeats
             minseed=args.minseed,  # Minimum seed length for alignment
             minid=args.minid,  # Minimum percent identity between repeats
+            blast_evalue=args.blast_evalue,  # E-value threshold for BLAST alignments
             diagfactor=args.diagfactor,  # Diagonal factor for clustering matches
             mites=args.makemites,  # Whether to construct synthetic MITEs
             report=args.splitmode,  # Mode for reporting results (split, internal, etc.)
@@ -133,6 +134,7 @@ def main(args: Optional[Namespace] = None) -> None:
             minterm=args.minterm,  # Minimum length of terminal repeats
             minseed=args.minseed,  # Minimum seed length for alignment
             minid=args.minid,  # Minimum percent identity between repeats
+            blast_evalue=args.blast_evalue,  # E-value threshold for BLAST alignments
             diagfactor=args.diagfactor,  # Diagonal factor for clustering matches
             mites=args.makemites,  # Whether to construct synthetic MITEs
             report=args.splitmode,  # Mode for reporting results (split, internal, etc.)

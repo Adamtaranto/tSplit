@@ -28,6 +28,7 @@ def getTIRs(
     fasta_file: str,
     flankdist: int = 10,
     minid: float = 80,
+    blast_evalue: float = 1e-3,
     minterm: int = 10,
     minseed: int = 5,
     diagfactor: float = 0.3,
@@ -54,6 +55,8 @@ def getTIRs(
         Maximum distance from element start for TIR candidates, by default 10.
     minid : float, optional
         Minimum identity between terminal repeat pairs, by default 80.
+    blast_evalue: float, optional
+        Expectation value (E-value) threshold for saving hits in BLAST, by default 1e-3.
     minterm : int, optional
         Minimum length for a terminal repeat to be considered, by default 10.
     minseed : int, optional
@@ -150,7 +153,9 @@ def getTIRs(
                 runner.run()
             elif alignTool == 'blastn':
                 # Alternatively, use blastn as search tool and write nucmer.coords-like output.
-                cmd = makeBlast(seq=tempFasta, outfile=tempCoords, pid=minid)
+                cmd = makeBlast(
+                    seq=tempFasta, outfile=tempCoords, pid=minid, evalue=blast_evalue
+                )
                 run_cmd(cmd, verbose=verbose, workingDir=tempDir)
 
             alignments = filterCoordsFileTIR(
@@ -397,6 +402,7 @@ def getLTRs(
     fasta_file: str,
     flankdist: int = 10,
     minid: float = 80,
+    blast_evalue: float = 1e-3,
     minterm: int = 10,
     minseed: int = 5,
     diagfactor: float = 0.3,
@@ -421,6 +427,8 @@ def getLTRs(
         Maximum distance from element start for LTR candidates, by default 10.
     minid : float, optional
         Minimum identity between terminal repeat pairs, by default 80.
+    blast_evalue: float, optional
+        Expectation value (E-value) threshold for saving hits in BLAST, by default 1e-3.
     minterm : int, optional
         Minimum length for a terminal repeat to be considered, by default 10.
     minseed : int, optional
@@ -510,7 +518,9 @@ def getLTRs(
                 runner.run()
             elif alignTool == 'blastn':
                 # Alternatively, use blastn as search tool and write nucmer.coords-like output.
-                cmd = makeBlast(seq=tempFasta, outfile=tempCoords, pid=minid)
+                cmd = makeBlast(
+                    seq=tempFasta, outfile=tempCoords, pid=minid, evalue=blast_evalue
+                )
                 run_cmd(cmd, verbose=verbose, workingDir=tempDir)
 
             alignments = filterCoordsFileLTR(
@@ -725,6 +735,7 @@ def getTIRs_with_data(
     fasta_file: str,
     flankdist: int = 10,
     minid: float = 80,
+    blast_evalue: float = 1e-3,
     minterm: int = 10,
     minseed: int = 5,
     diagfactor: float = 0.3,
@@ -746,11 +757,42 @@ def getTIRs_with_data(
 
     Parameters
     ----------
-    All parameters are the same as getTIRs, plus:
+    fasta_file : str
+        Path to the multifasta file containing sequence records.
+    flankdist : int, optional
+        Maximum distance from element start for TIR candidates, by default 10.
+    minid : float, optional
+        Minimum identity between terminal repeat pairs, by default 80.
+    blast_evalue: float, optional
+        Expectation value (E-value) threshold for saving hits in BLAST, by default 1e-3.
+    minterm : int, optional
+        Minimum length for a terminal repeat to be considered, by default 10.
+    blast_evalue: float, optional
+        Expectation value (E-value) threshold for saving hits in BLAST, by default 1e-3.
+    minseed : int, optional
+        Minimum seed length for nucmer, by default 5.
+    diagfactor : float, optional
+        Diagonal factor for nucmer, by default 0.3.
+    mites : bool, optional
+        Whether to attempt to construct synthetic MITEs, by default False.
+    report : str, optional
+        Reporting mode for TIRs ('split', 'external', 'internal', 'all'), by default 'split'.
+    temp : str, optional
+        Path to the temporary directory, by default None.
+    keeptemp : bool, optional
+        Whether to keep the temporary directory after processing, by default False.
+    alignTool : str, optional
+        Alignment tool to use ('nucmer' or 'blastn'), by default 'nucmer'.
+    verbose : bool, optional
+        Whether to print verbose output, by default True.
+    both : bool, optional
+        Whether to report both left and right terminal repeats, by default False.
     collect_alignments : bool, optional
         Whether to collect alignment data for PAF output, by default False.
     collect_features : bool, optional
         Whether to collect feature data for GFF3 output, by default False.
+    blast_evalue: float, optional
+        Expectation value (E-value) threshold for saving hits in BLAST, by default 1e-3.
 
     Returns
     -------
@@ -835,7 +877,9 @@ def getTIRs_with_data(
                 )
                 runner.run()
             elif alignTool == 'blastn':
-                cmd = makeBlast(seq=tempFasta, outfile=tempCoords, pid=minid)
+                cmd = makeBlast(
+                    seq=tempFasta, outfile=tempCoords, pid=minid, evalue=blast_evalue
+                )
                 run_cmd(cmd, verbose=verbose, workingDir=tempDir)
 
             alignments = filterCoordsFileTIR(
@@ -860,9 +904,7 @@ def getTIRs_with_data(
                     strand = '-' if not aln.on_same_strand() else '+'
 
                     # Calculate number of matches from percent identity
-                    num_matches = int(
-                        aln.hit_length_ref * aln.percent_identity / 100.0
-                    )
+                    num_matches = int(aln.hit_length_ref * aln.percent_identity / 100.0)
 
                     alignment_data.append(
                         {
@@ -990,6 +1032,7 @@ def getLTRs_with_data(
     fasta_file: str,
     flankdist: int = 10,
     minid: float = 80,
+    blast_evalue: float = 1e-3,
     minterm: int = 10,
     minseed: int = 5,
     diagfactor: float = 0.3,
@@ -1010,7 +1053,32 @@ def getLTRs_with_data(
 
     Parameters
     ----------
-    All parameters are the same as getLTRs, plus:
+    fasta_file : str
+        Path to the multifasta file containing sequence records.
+    flankdist : int, optional
+        Maximum distance from element start for LTR candidates, by default 10.
+    minid : float, optional
+        Minimum identity between terminal repeat pairs, by default 80.
+    blast_evalue: float, optional
+        Expectation value (E-value) threshold for saving hits in BLAST, by default 1e-3.
+    minterm : int, optional
+        Minimum length for a terminal repeat to be considered, by default 10.
+    minseed : int, optional
+        Minimum seed length for nucmer, by default 5.
+    diagfactor : float, optional
+        Diagonal factor for nucmer, by default 0.3.
+    report : str, optional
+        Reporting mode for LTRs ('split', 'external', 'internal', 'all'), by default 'split'.
+    temp : str, optional
+        Path to the temporary directory, by default None.
+    keeptemp : bool, optional
+        Whether to keep the temporary directory after processing, by default False.
+    alignTool : str, optional
+        Alignment tool to use ('nucmer' or 'blastn'), by default 'nucmer'.
+    verbose : bool, optional
+        Whether to print verbose output, by default True.
+    both : bool, optional
+        Whether to report both left and right terminal repeats, by default False.
     collect_alignments : bool, optional
         Whether to collect alignment data for PAF output, by default False.
     collect_features : bool, optional
@@ -1034,6 +1102,7 @@ def getLTRs_with_data(
             fasta_file,
             flankdist=flankdist,
             minid=minid,
+            blast_evalue=blast_evalue,
             minterm=minterm,
             minseed=minseed,
             diagfactor=diagfactor,
@@ -1098,7 +1167,9 @@ def getLTRs_with_data(
                 )
                 runner.run()
             elif alignTool == 'blastn':
-                cmd = makeBlast(seq=tempFasta, outfile=tempCoords, pid=minid)
+                cmd = makeBlast(
+                    seq=tempFasta, outfile=tempCoords, pid=minid, evalue=blast_evalue
+                )
                 run_cmd(cmd, verbose=verbose, workingDir=tempDir)
 
             alignments = filterCoordsFileLTR(
@@ -1123,9 +1194,7 @@ def getLTRs_with_data(
                     strand = '+' if aln.on_same_strand() else '-'
 
                     # Calculate number of matches from percent identity
-                    num_matches = int(
-                        aln.hit_length_ref * aln.percent_identity / 100.0
-                    )
+                    num_matches = int(aln.hit_length_ref * aln.percent_identity / 100.0)
 
                     alignment_data.append(
                         {
