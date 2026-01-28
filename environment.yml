@@ -4,7 +4,7 @@ channels:
   - bioconda
 dependencies:
   - python==3.12
-  - mummer
+  - mummer4
   - blast
   - pip
   - pip:
