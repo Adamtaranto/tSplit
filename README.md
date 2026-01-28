@@ -37,8 +37,18 @@ tuneable heuristics to select an alignment pair most likely to represent an LTR 
 Requirements:
 
 - [pymummer](https://pypi.python.org/pypi/pymummer) version >= 0.10.3 with wrapper for nucmer option _--diagfactor_.
-- [MUMmer](http://mummer.sourceforge.net/)
-- [BLAST+](ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/) (Optional)
+- [MUMmer4](https://github.com/mummer4/mummer)
+- [BLAST+](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/) (Optional)
+
+You can create a Conda environment with these dependencies using the YAML file in this repo.
+
+```bash
+conda env create -f environment.yml
+
+conda activate tsplit
+```
+
+After activating the tsplit environment you can use pip to install the latest version of tsplit.
 
 Installation options:
 
@@ -55,14 +65,6 @@ This is the best way to ensure you have the latest development version.
 
 ```bash
 pip install git+https://github.com/Adamtaranto/tSplit.git
-```
-
-3. Clone from this repository and install as a local Python package.
-
-Do this if you want to edit the code.
-
-```bash
-git clone https://github.com/Adamtaranto/tSplit.git && cd tSplit && pip install -e '.[dev]'
 ```
 
 ### Example usage
@@ -90,6 +92,17 @@ tsplit TIR -i tests/data/TIR_element.fa -p TIR_split --maxdist 10 --minid 80.0 -
 ```
 
 Output: `TIR_split_tsplit_output.fasta`
+
+#### Visualise annotated dotplot
+
+```bash
+tsplit TIR -i tests/data/TIR_element.fa -d results --splitmode split --paf --gff
+
+flexidot -i tests/data/TIR_element.fa -a results/TIR_element.paf -m 2 -o results/blast_dotplot --gff results/TIR_element.gff3
+```
+
+Output:
+![TIR element blastn self-align dotplot with detected TIRs highlighted in red on the diagonal.](https://github.com/Adamtaranto/tSplit/blob/main/docs/images/TIR_blast_dotplot-Polydotplot.png?raw=true)
 
 ### tsplit LTR
 
