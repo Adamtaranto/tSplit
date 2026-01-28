@@ -3,7 +3,41 @@
 import os
 import tempfile
 
-from tsplit.utils import write_gff3, write_paf
+from tsplit.utils import resolve_output_path, write_gff3, write_paf
+
+
+def test_resolve_output_path_none():
+    """Test that None filepath returns None."""
+    assert resolve_output_path(None, None) is None
+    assert resolve_output_path(None, '/some/dir') is None
+
+
+def test_resolve_output_path_absolute():
+    """Test that absolute paths are returned unchanged."""
+    abs_path = '/absolute/path/to/file.txt'
+    assert resolve_output_path(abs_path, None) == abs_path
+    assert resolve_output_path(abs_path, '/some/dir') == abs_path
+
+
+def test_resolve_output_path_relative_no_outdir():
+    """Test that relative paths without outdir are returned unchanged."""
+    rel_path = 'relative/path/file.txt'
+    assert resolve_output_path(rel_path, None) == rel_path
+
+
+def test_resolve_output_path_relative_with_outdir():
+    """Test that relative paths are joined with outdir."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        rel_path = 'output.txt'
+        result = resolve_output_path(rel_path, tmpdir)
+        expected = os.path.join(os.path.abspath(tmpdir), rel_path)
+        assert result == expected
+
+        # Test with a more complex relative path
+        rel_path2 = 'subdir/output.txt'
+        result2 = resolve_output_path(rel_path2, tmpdir)
+        expected2 = os.path.join(os.path.abspath(tmpdir), rel_path2)
+        assert result2 == expected2
 
 
 def test_write_paf():

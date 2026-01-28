@@ -17,7 +17,14 @@ from typing import Optional
 
 from tsplit.logs import init_logging
 from tsplit.parseAlign import getTIRs, getTIRs_with_data
-from tsplit.utils import check_tools, segWrite, tSplitchecks, write_gff3, write_paf
+from tsplit.utils import (
+    check_tools,
+    resolve_output_path,
+    segWrite,
+    tSplitchecks,
+    write_gff3,
+    write_paf,
+)
 
 
 def main(args: Optional[Namespace] = None) -> None:
@@ -69,9 +76,13 @@ def main(args: Optional[Namespace] = None) -> None:
     # Create output directories and validate input files
     outpath = tSplitchecks(args)
 
+    # Resolve PAF and GFF paths considering outdir option
+    paf_path = resolve_output_path(args.paf, args.outdir)
+    gff_path = resolve_output_path(args.gff, args.outdir)
+
     # Determine if we need to collect alignment or feature data
-    collect_alignments = args.paf is not None
-    collect_features = args.gff is not None
+    collect_alignments = paf_path is not None
+    collect_features = gff_path is not None
 
     # Search for inverted terminal repeats
     # Optionally construct synthetic MITE from TIRs if detected
@@ -95,12 +106,12 @@ def main(args: Optional[Namespace] = None) -> None:
         )
 
         # Write PAF output if requested
-        if args.paf:
-            write_paf(alignment_data, args.paf)
+        if paf_path:
+            write_paf(alignment_data, paf_path)
 
         # Write GFF3 output if requested
-        if args.gff:
-            write_gff3(feature_data, args.gff, source='tSplit_TIR')
+        if gff_path:
+            write_gff3(feature_data, gff_path, source='tSplit_TIR')
     else:
         # Use the original function for backward compatibility
         segments = getTIRs(

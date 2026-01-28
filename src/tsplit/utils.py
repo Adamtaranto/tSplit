@@ -16,6 +16,45 @@ from Bio import SeqIO
 from Bio.SeqRecord import SeqRecord
 
 
+def resolve_output_path(filepath: Optional[str], outdir: Optional[str]) -> Optional[str]:
+    """
+    Resolve output file path considering the outdir option.
+
+    If filepath is None, returns None.
+    If filepath is an absolute path, returns it unchanged.
+    If filepath is a relative path and outdir is specified, joins them.
+    If filepath is a relative path and outdir is None, returns filepath unchanged.
+
+    Parameters
+    ----------
+    filepath : str or None
+        The output file path (can be relative or absolute).
+    outdir : str or None
+        The output directory specified by the user.
+
+    Returns
+    -------
+    str or None
+        The resolved file path, or None if filepath is None.
+    """
+    if filepath is None:
+        return None
+
+    # If filepath is already absolute, return it as-is
+    if os.path.isabs(filepath):
+        return filepath
+
+    # If outdir is specified, join the relative filepath with outdir
+    if outdir is not None:
+        # Get the absolute path of outdir
+        abs_outdir = os.path.abspath(outdir)
+        # Join with the filepath
+        return os.path.join(abs_outdir, filepath)
+
+    # Otherwise, return the filepath as-is (will be relative to CWD)
+    return filepath
+
+
 def check_tools(
     required_tools: Optional[List[str]] = None,
     optional_tools: Optional[List[str]] = None,
