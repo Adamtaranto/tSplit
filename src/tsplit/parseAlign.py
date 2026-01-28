@@ -844,11 +844,11 @@ def getTIRs_with_data(
 
             # Collect ALL alignment data for PAF if requested (before filtering)
             if collect_alignments:
-                # Read all alignments from coords file (excluding self-hits)
+                # Read all alignments from coords file (including self-hits for complete PAF)
                 file_reader = coords_file.reader(tempCoords)
-                all_alignments = [hit for hit in file_reader if not hit.is_self_hit()]
+                all_alignments = list(file_reader)
 
-                # Add all non-self alignments to PAF output
+                # Add all alignments to PAF output
                 for aln in all_alignments:
                     # Get coordinates from alignment
                     aln_ref_start = aln.ref_coords().start
@@ -1107,11 +1107,11 @@ def getLTRs_with_data(
 
             # Collect ALL alignment data for PAF if requested (before filtering)
             if collect_alignments:
-                # Read all alignments from coords file (excluding self-hits)
+                # Read all alignments from coords file (including self-hits for complete PAF)
                 file_reader = coords_file.reader(tempCoords)
-                all_alignments = [hit for hit in file_reader if not hit.is_self_hit()]
+                all_alignments = list(file_reader)
 
-                # Add all non-self alignments to PAF output
+                # Add all alignments to PAF output
                 for aln in all_alignments:
                     # Get coordinates from alignment
                     aln_ref_start = aln.ref_coords().start
