@@ -55,7 +55,7 @@ def getTIRs(
         Maximum distance from element start for TIR candidates, by default 10.
     minid : float, optional
         Minimum identity between terminal repeat pairs, by default 80.
-    blast_evalue: float, optional
+    blast_evalue : float, optional
         Expectation value (E-value) threshold for saving hits in BLAST, by default 1e-3.
     minterm : int, optional
         Minimum length for a terminal repeat to be considered, by default 10.
@@ -427,7 +427,7 @@ def getLTRs(
         Maximum distance from element start for LTR candidates, by default 10.
     minid : float, optional
         Minimum identity between terminal repeat pairs, by default 80.
-    blast_evalue: float, optional
+    blast_evalue : float, optional
         Expectation value (E-value) threshold for saving hits in BLAST, by default 1e-3.
     minterm : int, optional
         Minimum length for a terminal repeat to be considered, by default 10.
@@ -763,12 +763,10 @@ def getTIRs_with_data(
         Maximum distance from element start for TIR candidates, by default 10.
     minid : float, optional
         Minimum identity between terminal repeat pairs, by default 80.
-    blast_evalue: float, optional
+    blast_evalue : float, optional
         Expectation value (E-value) threshold for saving hits in BLAST, by default 1e-3.
     minterm : int, optional
         Minimum length for a terminal repeat to be considered, by default 10.
-    blast_evalue: float, optional
-        Expectation value (E-value) threshold for saving hits in BLAST, by default 1e-3.
     minseed : int, optional
         Minimum seed length for nucmer, by default 5.
     diagfactor : float, optional
@@ -791,8 +789,6 @@ def getTIRs_with_data(
         Whether to collect alignment data for PAF output, by default False.
     collect_features : bool, optional
         Whether to collect feature data for GFF3 output, by default False.
-    blast_evalue: float, optional
-        Expectation value (E-value) threshold for saving hits in BLAST, by default 1e-3.
 
     Returns
     -------
@@ -1059,7 +1055,7 @@ def getLTRs_with_data(
         Maximum distance from element start for LTR candidates, by default 10.
     minid : float, optional
         Minimum identity between terminal repeat pairs, by default 80.
-    blast_evalue: float, optional
+    blast_evalue : float, optional
         Expectation value (E-value) threshold for saving hits in BLAST, by default 1e-3.
     minterm : int, optional
         Minimum length for a terminal repeat to be considered, by default 10.
