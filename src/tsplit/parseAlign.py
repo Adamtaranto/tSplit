@@ -739,7 +739,7 @@ def getTIRs_with_data(
     collect_features: bool = False,
 ) -> tuple:
     """
-    Wrapper for getTIRs that additionally collects alignment and feature data.
+    Collect alignment and feature data while extracting TIRs.
 
     This function calls getTIRs and captures alignment data for PAF output
     and feature data for GFF3 output while preserving the original behavior.
@@ -989,7 +989,7 @@ def getLTRs_with_data(
     collect_features: bool = False,
 ) -> tuple:
     """
-    Wrapper for getLTRs that additionally collects alignment and feature data.
+    Collect alignment and feature data while extracting LTRs.
 
     This function calls getLTRs and captures alignment data for PAF output
     and feature data for GFF3 output while preserving the original behavior.
