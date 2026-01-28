@@ -320,6 +320,39 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="tsplit TIR">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-tir-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic TIR processing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#report-both-tirs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Report both TIRs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generate-annotated-dotplot" class="md-nav__link">
+    <span class="md-ellipsis">
+      Generate annotated dotplot
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -412,6 +445,39 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="tsplit TIR">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-tir-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic TIR processing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#report-both-tirs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Report both TIRs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generate-annotated-dotplot" class="md-nav__link">
+    <span class="md-ellipsis">
+      Generate annotated dotplot
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -447,22 +513,33 @@
 <p>tSplit can be run in two modes: <code>tsplit LTR</code> and <code>tsplit TIR</code>, for extracting long terminal repeats or terminal inverted repeats, respectively.</p>
 <p>Options are the same for each.</p>
 <h2 id="tsplit-tir">tsplit TIR</h2>
+<h3 id="basic-tir-processing">Basic TIR processing</h3>
 <p>For each element in <em>TIR_element.fa</em> split into internal and external (TIR) segments.</p>
 <p>Split segments will be written to <em>TIR_split_tsplit_output.fasta</em> with suffix "_I" for internal or "_TIR" for external segments.</p>
 <p>TIRs must be at least 10bp in length and share 80%
 identity and occur within 10bp of each end of the input element.</p>
-<p>Additionally, synthetic MITEs will be constructed by concatenation of left and right TIRs, with internal segments excised.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>tsplit<span class="w"> </span>TIR<span class="w"> </span>-i<span class="w"> </span>tests/data/TIR_element.fa<span class="w"> </span>-p<span class="w"> </span>TIR_split<span class="w"> </span>--makemites<span class="w"> </span>--keeptemp
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>tsplit<span class="w"> </span>TIR<span class="w"> </span>-i<span class="w"> </span>tests/data/TIR_element.fa<span class="w"> </span>-d<span class="w"> </span>results<span class="w"> </span>-p<span class="w"> </span>TIR_split
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Equivalet to defaults</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>tsplit<span class="w"> </span>TIR<span class="w"> </span>-i<span class="w"> </span>tests/data/TIR_element.fa<span class="w"> </span>-p<span class="w"> </span>TIR_split<span class="w"> </span>--maxdist<span class="w"> </span><span class="m">10</span><span class="w"> </span>--minid<span class="w"> </span><span class="m">80</span>.0<span class="w"> </span>--minterm<span class="w"> </span><span class="m">10</span><span class="w"> </span>--method<span class="w"> </span>blastn<span class="w"> </span>--splitmode<span class="w"> </span>split<span class="w"> </span>--makemites<span class="w"> </span>--keeptemp
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>tsplit<span class="w"> </span>TIR<span class="w"> </span>-i<span class="w"> </span>tests/data/TIR_element.fa<span class="w"> </span>-d<span class="w"> </span>results<span class="w"> </span>-p<span class="w"> </span>TIR_split<span class="w"> </span>--method<span class="w"> </span>blastn<span class="w"> </span>--maxdist<span class="w"> </span><span class="m">10</span><span class="w"> </span>--minid<span class="w"> </span><span class="m">80</span>.0<span class="w"> </span>--minterm<span class="w"> </span><span class="m">10</span><span class="w"> </span>--blast_evalue<span class="w"> </span><span class="m">0</span>.001<span class="w"> </span>--method<span class="w"> </span>blastn<span class="w"> </span>--splitmode<span class="w"> </span>split
 </code></pre></div>
-<p>Output: <code>TIR_split_tsplit_output.fasta</code></p>
+<p>Output: <code>results/TIR_split_tsplit_output.fasta</code></p>
+<h3 id="report-both-tirs">Report both TIRs</h3>
+<p>With <code>--splitmode external</code> only the outermost TIR is returned. Setting <code>--both</code> returns both TIRs, useful if not identical.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>tsplit<span class="w"> </span>TIR<span class="w"> </span>-i<span class="w"> </span>tests/data/TIR_element.fa<span class="w"> </span>-d<span class="w"> </span>results<span class="w"> </span>-p<span class="w"> </span>TIR_external_both<span class="w"> </span>--splitmode<span class="w"> </span>external<span class="w"> </span>--both
+</code></pre></div>
+<h3 id="generate-annotated-dotplot">Generate annotated dotplot</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>tsplit<span class="w"> </span>TIR<span class="w"> </span>-i<span class="w"> </span>tests/data/TIR_element.fa<span class="w"> </span>-d<span class="w"> </span>results<span class="w"> </span>--splitmode<span class="w"> </span>split<span class="w"> </span>--blast_evalue<span class="w"> </span><span class="m">0</span>.001<span class="w"> </span>--minid<span class="w"> </span><span class="m">60</span>.0<span class="w"> </span>--paf<span class="w"> </span>--gff
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>flexidot<span class="w"> </span>-i<span class="w"> </span>tests/data/TIR_element.fa<span class="w"> </span>-a<span class="w"> </span>results/TIR_element.paf<span class="w"> </span>-m<span class="w"> </span><span class="m">2</span><span class="w"> </span>-o<span class="w"> </span>results/blast_dotplot<span class="w"> </span>--gff<span class="w"> </span>results/TIR_element.gff3
+</code></pre></div>
+<p>Output:
+<img alt="TIR element blastn self-align dotplot with detected TIRs highlighted in red on the diagonal." src="../../images/TIR_blast_dotplot-Polydotplot.png" /></p>
 <h2 id="tsplit-ltr">tsplit LTR</h2>
 <p>For each element in <em>LTR_retrotransposon.fa</em> split into internal and external segments.</p>
 <p>Split segments will be written to <em>LTR_split_tsplit_output.fasta</em> with suffix "_I" for internal or "_LTR" for external segments.</p>
 <p>LTRs must be at least 10bp in length and share 80% identity and occur within 10bp of each end of the input element.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>tsplit<span class="w"> </span>LTR<span class="w"> </span>-i<span class="w"> </span>tests/data/LTR_retrotransposon.fa<span class="w"> </span>-p<span class="w"> </span>LTR_split
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>tsplit<span class="w"> </span>LTR<span class="w"> </span>-i<span class="w"> </span>tests/data/LTR_retrotransposon.fa<span class="w"> </span>-p<span class="w"> </span>LTR_split
 </code></pre></div>
 <p>Output: LTR_split_tsplit_output.fasta</p>
 

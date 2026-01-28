@@ -521,7 +521,7 @@
 
 
 
-<p><a href="https://opensource.org/licenses/MIT"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" /></a>
+<p><a href="https://www.gnu.org/licenses/gpl-3.0"><img alt="License: GPL v3" src="https://img.shields.io/badge/License-GPLv3-blue.svg" /></a>
 <a href="https://badge.fury.io/py/tSplit"><img alt="PyPI version" src="https://badge.fury.io/py/tSplit.svg" /></a>
 <a href="https://codecov.io/gh/Adamtaranto/tSplit"><img alt="codecov" src="https://codecov.io/gh/Adamtaranto/tSplit/graph/badge.svg?token=24AGM1OWS5" /></a>
 <a href="https://pepy.tech/project/tsplit"><img alt="Downloads" src="https://pepy.tech/badge/tsplit" /></a></p>
@@ -583,13 +583,12 @@ tuneable heuristics to select an alignment pair most likely to represent an LTR 
 <p>Split segments will be written to <em>TIR_split_tsplit_output.fasta</em> with suffix "_I" for internal or "_TIR" for external segments.</p>
 <p>TIRs must be at least 10bp in length and share 80%
 identity and occur within 10bp of each end of the input element.</p>
-<p>Additionally, synthetic MITEs will be constructed by concatenation of left and right TIRs, with internal segments excised.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>tsplit<span class="w"> </span>TIR<span class="w"> </span>-i<span class="w"> </span>tests/data/TIR_element.fa<span class="w"> </span>-p<span class="w"> </span>TIR_split<span class="w"> </span>--makemites<span class="w"> </span>--keeptemp
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>tsplit<span class="w"> </span>TIR<span class="w"> </span>-i<span class="w"> </span>tests/data/TIR_element.fa<span class="w"> </span>-d<span class="w"> </span>results<span class="w"> </span>-p<span class="w"> </span>TIR_split
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Equivalet to defaults</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>tsplit<span class="w"> </span>TIR<span class="w"> </span>-i<span class="w"> </span>tests/data/TIR_element.fa<span class="w"> </span>-p<span class="w"> </span>TIR_split<span class="w"> </span>--maxdist<span class="w"> </span><span class="m">10</span><span class="w"> </span>--minid<span class="w"> </span><span class="m">80</span>.0<span class="w"> </span>--minterm<span class="w"> </span><span class="m">10</span><span class="w"> </span>--method<span class="w"> </span>blastn<span class="w"> </span>--splitmode<span class="w"> </span>split<span class="w"> </span>--makemites<span class="w"> </span>--keeptemp
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>tsplit<span class="w"> </span>TIR<span class="w"> </span>-i<span class="w"> </span>tests/data/TIR_element.fa<span class="w"> </span>-d<span class="w"> </span>results<span class="w"> </span>-p<span class="w"> </span>TIR_split<span class="w"> </span>--method<span class="w"> </span>blastn<span class="w"> </span>--maxdist<span class="w"> </span><span class="m">10</span><span class="w"> </span>--minid<span class="w"> </span><span class="m">80</span>.0<span class="w"> </span>--minterm<span class="w"> </span><span class="m">10</span><span class="w"> </span>--blast_evalue<span class="w"> </span><span class="m">0</span>.001<span class="w"> </span>--method<span class="w"> </span>blastn<span class="w"> </span>--splitmode<span class="w"> </span>split
 </code></pre></div>
-<p>Output: <code>TIR_split_tsplit_output.fasta</code></p>
+<p>Output: <code>results/TIR_split_tsplit_output.fasta</code></p>
 <h3 id="tsplit-ltr">tsplit LTR</h3>
 <p>For each element in <em>LTR_retrotransposon.fa</em> split into internal and external segments.</p>
 <p>Split segments will be written to <em>LTR_split_tsplit_output.fasta</em> with suffix "_I" for internal or "_LTR" for external segments.</p>
