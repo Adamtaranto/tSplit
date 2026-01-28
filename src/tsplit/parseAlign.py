@@ -957,7 +957,9 @@ def getTIRs_with_data(
                     )
                     synMITE.id = f'{synMITE.id}_synMITE'
                     synMITE.name = synMITE.id
-                    synMITE.description = f'[Synthetic MITE constructed from {rec.id} TIRs]'
+                    synMITE.description = (
+                        f'[Synthetic MITE constructed from {rec.id} TIRs]'
+                    )
                     segments_list.append(synMITE)
 
     finally:
@@ -1206,4 +1208,3 @@ def getLTRs_with_data(
 
     # Return segments as a generator
     return iter(segments_list), alignment_data, feature_data
-

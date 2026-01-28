@@ -265,10 +265,10 @@ def write_paf(alignment_data: List[dict], outfile: str) -> None:
         for aln in alignment_data:
             # Write PAF line with 12 mandatory fields
             f.write(
-                f"{aln['qry_name']}\t{aln['qry_length']}\t{aln['qry_start']}\t{aln['qry_end']}\t"
-                f"{aln['strand']}\t{aln['ref_name']}\t{aln['ref_length']}\t{aln['ref_start']}\t"
-                f"{aln['ref_end']}\t{aln['num_matches']}\t{aln['aln_block_length']}\t"
-                f"{aln['mapping_quality']}\n"
+                f'{aln["qry_name"]}\t{aln["qry_length"]}\t{aln["qry_start"]}\t{aln["qry_end"]}\t'
+                f'{aln["strand"]}\t{aln["ref_name"]}\t{aln["ref_length"]}\t{aln["ref_start"]}\t'
+                f'{aln["ref_end"]}\t{aln["num_matches"]}\t{aln["aln_block_length"]}\t'
+                f'{aln["mapping_quality"]}\n'
             )
     logging.info(f'Wrote {len(alignment_data)} alignments to PAF file.')
 
@@ -320,8 +320,7 @@ def write_gff3(feature_data: List[dict], outfile: str, source: str = 'tSplit') -
             phase = feat.get('phase', '.')
             # Write GFF3 line with 9 columns
             f.write(
-                f"{feat['seqid']}\t{source}\t{feat['type']}\t{feat['start']}\t{feat['end']}\t"
-                f"{score}\t{feat['strand']}\t{phase}\t{feat['attributes']}\n"
+                f'{feat["seqid"]}\t{source}\t{feat["type"]}\t{feat["start"]}\t{feat["end"]}\t'
+                f'{score}\t{feat["strand"]}\t{phase}\t{feat["attributes"]}\n'
             )
     logging.info(f'Wrote {len(feature_data)} features to GFF3 file.')
-
