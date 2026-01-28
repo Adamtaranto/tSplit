@@ -217,3 +217,108 @@ def segWrite(
         # Clean up empty files to avoid clutter
         if seqcount == 0:
             os.remove(outfile)
+
+
+def write_paf(alignment_data: List[dict], outfile: str) -> None:
+    """
+    Write alignment data in PAF (Pairwise mApping Format).
+
+    PAF is a text format for representing alignment between two sequences.
+    Each line represents a single alignment with 12 mandatory fields.
+
+    Parameters
+    ----------
+    alignment_data : list of dict
+        List of dictionaries containing alignment information.
+        Each dict should have keys: qry_name, qry_length, qry_start, qry_end,
+        strand, ref_name, ref_length, ref_start, ref_end, num_matches,
+        aln_block_length, mapping_quality.
+    outfile : str
+        Path to the output PAF file.
+
+    Returns
+    -------
+    None
+        This function writes data to a file and doesn't return any value.
+
+    Notes
+    -----
+    PAF format specification:
+    1. Query sequence name
+    2. Query sequence length
+    3. Query start (0-based)
+    4. Query end (0-based)
+    5. Relative strand: "+" or "-"
+    6. Target sequence name
+    7. Target sequence length
+    8. Target start on original strand (0-based)
+    9. Target end on original strand (0-based)
+    10. Number of matching bases
+    11. Alignment block length
+    12. Mapping quality (0-255; 255 for missing)
+    """
+    logging.info(f'Writing PAF output to: {outfile}')
+    with open(outfile, 'w') as f:
+        for aln in alignment_data:
+            # Write PAF line with 12 mandatory fields
+            f.write(
+                f"{aln['qry_name']}\t{aln['qry_length']}\t{aln['qry_start']}\t{aln['qry_end']}\t"
+                f"{aln['strand']}\t{aln['ref_name']}\t{aln['ref_length']}\t{aln['ref_start']}\t"
+                f"{aln['ref_end']}\t{aln['num_matches']}\t{aln['aln_block_length']}\t"
+                f"{aln['mapping_quality']}\n"
+            )
+    logging.info(f'Wrote {len(alignment_data)} alignments to PAF file.')
+
+
+def write_gff3(feature_data: List[dict], outfile: str, source: str = 'tSplit') -> None:
+    """
+    Write terminal repeat features in GFF3 format.
+
+    GFF3 (General Feature Format version 3) is a standard format for
+    representing genomic features.
+
+    Parameters
+    ----------
+    feature_data : list of dict
+        List of dictionaries containing feature information.
+        Each dict should have keys: seqid, type, start, end, strand, attributes.
+        Optional keys: score, phase.
+    outfile : str
+        Path to the output GFF3 file.
+    source : str, optional
+        Source of the annotations (default: 'tSplit').
+
+    Returns
+    -------
+    None
+        This function writes data to a file and doesn't return any value.
+
+    Notes
+    -----
+    GFF3 format has 9 tab-separated columns:
+    1. seqid - sequence ID
+    2. source - source of the annotation (e.g., 'tSplit')
+    3. type - feature type (e.g., 'TIR', 'LTR')
+    4. start - 1-based start position
+    5. end - 1-based end position
+    6. score - score (or '.' for none)
+    7. strand - '+', '-', or '.' for unknown
+    8. phase - CDS phase (or '.' for non-CDS features)
+    9. attributes - semicolon-separated attribute=value pairs
+    """
+    logging.info(f'Writing GFF3 output to: {outfile}')
+    with open(outfile, 'w') as f:
+        # Write GFF3 header
+        f.write('##gff-version 3\n')
+
+        # Write each feature
+        for feat in feature_data:
+            score = feat.get('score', '.')
+            phase = feat.get('phase', '.')
+            # Write GFF3 line with 9 columns
+            f.write(
+                f"{feat['seqid']}\t{source}\t{feat['type']}\t{feat['start']}\t{feat['end']}\t"
+                f"{score}\t{feat['strand']}\t{phase}\t{feat['attributes']}\n"
+            )
+    logging.info(f'Wrote {len(feature_data)} features to GFF3 file.')
+

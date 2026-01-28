@@ -16,8 +16,8 @@ from argparse import Namespace
 from typing import Optional
 
 from tsplit.logs import init_logging
-from tsplit.parseAlign import getTIRs
-from tsplit.utils import check_tools, segWrite, tSplitchecks
+from tsplit.parseAlign import getTIRs, getTIRs_with_data
+from tsplit.utils import check_tools, segWrite, tSplitchecks, write_gff3, write_paf
 
 
 def main(args: Optional[Namespace] = None) -> None:
@@ -69,22 +69,54 @@ def main(args: Optional[Namespace] = None) -> None:
     # Create output directories and validate input files
     outpath = tSplitchecks(args)
 
+    # Determine if we need to collect alignment or feature data
+    collect_alignments = args.paf is not None
+    collect_features = args.gff is not None
+
     # Search for inverted terminal repeats
     # Optionally construct synthetic MITE from TIRs if detected
-    segments = getTIRs(
-        args.infile,
-        flankdist=args.maxdist,  # Maximum distance from element boundaries
-        minterm=args.minterm,  # Minimum length of terminal repeats
-        minseed=args.minseed,  # Minimum seed length for alignment
-        minid=args.minid,  # Minimum percent identity between repeats
-        diagfactor=args.diagfactor,  # Diagonal factor for clustering matches
-        mites=args.makemites,  # Whether to construct synthetic MITEs
-        report=args.splitmode,  # Mode for reporting results (split, internal, etc.)
-        alignTool=args.method,  # Alignment tool (blastn or nucmer)
-        temp=args.outdir,  # Directory for temporary files
-        keeptemp=args.keeptemp,  # Whether to keep temporary files
-        both=args.both,  # Whether to report both terminal repeats
-    )
+    if collect_alignments or collect_features:
+        # Use the wrapper function that collects additional data
+        segments, alignment_data, feature_data = getTIRs_with_data(
+            args.infile,
+            flankdist=args.maxdist,  # Maximum distance from element boundaries
+            minterm=args.minterm,  # Minimum length of terminal repeats
+            minseed=args.minseed,  # Minimum seed length for alignment
+            minid=args.minid,  # Minimum percent identity between repeats
+            diagfactor=args.diagfactor,  # Diagonal factor for clustering matches
+            mites=args.makemites,  # Whether to construct synthetic MITEs
+            report=args.splitmode,  # Mode for reporting results (split, internal, etc.)
+            alignTool=args.method,  # Alignment tool (blastn or nucmer)
+            temp=args.outdir,  # Directory for temporary files
+            keeptemp=args.keeptemp,  # Whether to keep temporary files
+            both=args.both,  # Whether to report both terminal repeats
+            collect_alignments=collect_alignments,
+            collect_features=collect_features,
+        )
+
+        # Write PAF output if requested
+        if args.paf:
+            write_paf(alignment_data, args.paf)
+
+        # Write GFF3 output if requested
+        if args.gff:
+            write_gff3(feature_data, args.gff, source='tSplit_TIR')
+    else:
+        # Use the original function for backward compatibility
+        segments = getTIRs(
+            args.infile,
+            flankdist=args.maxdist,  # Maximum distance from element boundaries
+            minterm=args.minterm,  # Minimum length of terminal repeats
+            minseed=args.minseed,  # Minimum seed length for alignment
+            minid=args.minid,  # Minimum percent identity between repeats
+            diagfactor=args.diagfactor,  # Diagonal factor for clustering matches
+            mites=args.makemites,  # Whether to construct synthetic MITEs
+            report=args.splitmode,  # Mode for reporting results (split, internal, etc.)
+            alignTool=args.method,  # Alignment tool (blastn or nucmer)
+            temp=args.outdir,  # Directory for temporary files
+            keeptemp=args.keeptemp,  # Whether to keep temporary files
+            both=args.both,  # Whether to report both terminal repeats
+        )
 
     # Write the identified segments to output file
     segWrite(outpath, segs=segments)

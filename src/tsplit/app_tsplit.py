@@ -136,6 +136,18 @@ def parse_args() -> Namespace:
         default=False,
         help='Report both left and right terminal repeats when splitmode is one of {all, split, external}. Suffixes will be "_L_TIR" and "_R_TIR". Right TIR will be reverse complemented for alignment with left TIR.',
     )
+    tir_parser.add_argument(
+        '--paf',
+        type=str,
+        default=None,
+        help='Write alignments in PAF (Pairwise mApping Format) to this file.',
+    )
+    tir_parser.add_argument(
+        '--gff',
+        type=str,
+        default=None,
+        help='Write the best terminal repeats (TIRs) as GFF3 features to this file.',
+    )
 
     # Set up parser for LTR subcommand
     ltr_parser = subparsers.add_parser(
@@ -223,6 +235,18 @@ def parse_args() -> Namespace:
         action='store_true',
         default=False,
         help='Report both left and right terminal repeats when splitmode is one of {all, split, external}. Suffixes will be "_L_LTR" and "_R_LTR". Right LTR will be in the same orientation as left LTR.',
+    )
+    ltr_parser.add_argument(
+        '--paf',
+        type=str,
+        default=None,
+        help='Write alignments in PAF (Pairwise mApping Format) to this file.',
+    )
+    ltr_parser.add_argument(
+        '--gff',
+        type=str,
+        default=None,
+        help='Write the best terminal repeats (LTRs) as GFF3 features to this file.',
     )
 
     # Parse and return the command-line arguments

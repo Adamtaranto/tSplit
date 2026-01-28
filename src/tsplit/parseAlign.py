@@ -719,3 +719,491 @@ def filterCoordsFileLTR(
     )
 
     return alignments
+
+
+def getTIRs_with_data(
+    fasta_file: str,
+    flankdist: int = 10,
+    minid: float = 80,
+    minterm: int = 10,
+    minseed: int = 5,
+    diagfactor: float = 0.3,
+    mites: bool = False,
+    report: str = 'split',
+    temp: Optional[str] = None,
+    keeptemp: bool = False,
+    alignTool: str = 'nucmer',
+    verbose: bool = True,
+    both: bool = False,
+    collect_alignments: bool = False,
+    collect_features: bool = False,
+) -> tuple:
+    """
+    Wrapper for getTIRs that additionally collects alignment and feature data.
+
+    This function calls getTIRs and captures alignment data for PAF output
+    and feature data for GFF3 output while preserving the original behavior.
+
+    Parameters
+    ----------
+    All parameters are the same as getTIRs, plus:
+    collect_alignments : bool, optional
+        Whether to collect alignment data for PAF output, by default False.
+    collect_features : bool, optional
+        Whether to collect feature data for GFF3 output, by default False.
+
+    Returns
+    -------
+    tuple
+        (segments_generator, alignment_data, feature_data)
+        - segments_generator: Generator yielding SeqRecords (same as getTIRs)
+        - alignment_data: List of dicts with alignment info (empty if collect_alignments=False)
+        - feature_data: List of dicts with feature info (empty if collect_features=False)
+    """
+    # Storage for alignment and feature data
+    alignment_data = []
+    feature_data = []
+
+    # If not collecting data, just return the original generator
+    if not collect_alignments and not collect_features:
+        segments = getTIRs(
+            fasta_file,
+            flankdist=flankdist,
+            minid=minid,
+            minterm=minterm,
+            minseed=minseed,
+            diagfactor=diagfactor,
+            mites=mites,
+            report=report,
+            temp=temp,
+            keeptemp=keeptemp,
+            alignTool=alignTool,
+            verbose=verbose,
+            both=both,
+        )
+        return segments, alignment_data, feature_data
+
+    # We need to process the file ourselves to collect data
+    # Set temp directory to cwd if none is provided
+    if not temp:
+        temp = os.getcwd()
+
+    # Create a unique temporary directory
+    tempDir = tempfile.mkdtemp(prefix=f'tsplit_TIR_temp_{alignTool}_', dir=temp)
+    logging.debug(f'Temporary directory created: {tempDir}')
+
+    seen_ids = set()
+    segments_list = []
+
+    try:
+        # Iterate over each record in the fasta file
+        for rec in SeqIO.parse(fasta_file, 'fasta'):
+            logging.info(
+                f'Processing record {len(seen_ids) + 1}: Name: {rec.id}, Length: {len(rec)}bp'
+            )
+
+            # Check for duplicate IDs
+            if rec.id in seen_ids:
+                logging.error(f'Duplicate record ID found: {rec.id}')
+                raise ValueError(f'Duplicate record ID found: {rec.id}')
+
+            seen_ids.add(rec.id)
+
+            # Create temp paths for single element fasta and alignment coords
+            tempFasta = os.path.join(tempDir, cleanID(rec.id) + '.fasta')
+            tempCoords = os.path.join(
+                tempDir, cleanID(rec.id) + '_' + alignTool + '.coords'
+            )
+
+            # Write current element to single fasta
+            with open(tempFasta, 'w') as f:
+                SeqIO.write(rec, f, 'fasta')
+
+            # Align to self
+            if alignTool == 'nucmer':
+                runner = nucmer.Runner(
+                    tempFasta,
+                    tempFasta,
+                    tempCoords,
+                    min_id=minid,
+                    min_length=minseed,
+                    diagfactor=diagfactor,
+                    mincluster=minterm,
+                    breaklen=200,
+                    maxmatch=True,
+                    simplify=False,
+                )
+                runner.run()
+            elif alignTool == 'blastn':
+                cmd = makeBlast(seq=tempFasta, outfile=tempCoords, pid=minid)
+                run_cmd(cmd, verbose=verbose, workingDir=tempDir)
+
+            alignments = filterCoordsFileTIR(
+                tempCoords, rec, minterm=minterm, flankdist=flankdist
+            )
+
+            # If alignments exist, collect data and generate segments
+            if alignments:
+                # Get coordinates from best alignment (first in sorted list)
+                best_aln = alignments[0]
+                ref_start = best_aln.ref_coords().start
+                ref_end = best_aln.ref_coords().end
+                qry_start = best_aln.qry_coords().start
+                qry_end = best_aln.qry_coords().end
+
+                # Collect alignment data for PAF if requested
+                if collect_alignments:
+                    # Calculate strand: TIRs are on opposite strands
+                    strand = '-' if not best_aln.on_same_strand() else '+'
+
+                    # Calculate number of matches from percent identity
+                    num_matches = int(
+                        best_aln.hit_length_ref * best_aln.percent_identity / 100.0
+                    )
+
+                    alignment_data.append(
+                        {
+                            'qry_name': rec.id,
+                            'qry_length': len(rec),
+                            'qry_start': qry_start,
+                            'qry_end': qry_end + 1,  # PAF uses end-exclusive
+                            'strand': strand,
+                            'ref_name': rec.id,
+                            'ref_length': len(rec),
+                            'ref_start': ref_start,
+                            'ref_end': ref_end + 1,  # PAF uses end-exclusive
+                            'num_matches': num_matches,
+                            'aln_block_length': best_aln.hit_length_ref,
+                            'mapping_quality': 255,  # Not available, use 255 (missing)
+                        }
+                    )
+
+                # Collect feature data for GFF3 if requested
+                if collect_features:
+                    # Create GFF3 features for TIRs
+                    # Convert to 1-based coordinates for GFF3
+                    left_tir_start = ref_start + 1
+                    left_tir_end = ref_end + 1
+                    right_tir_start = qry_start + 1
+                    right_tir_end = qry_end + 1
+
+                    # Left TIR feature
+                    feature_data.append(
+                        {
+                            'seqid': rec.id,
+                            'type': 'TIR',
+                            'start': left_tir_start,
+                            'end': left_tir_end,
+                            'score': f'{best_aln.percent_identity:.2f}',
+                            'strand': '+',
+                            'phase': '.',
+                            'attributes': f'ID={rec.id}_TIR_L;Name=Left_TIR;length={ref_end - ref_start + 1};identity={best_aln.percent_identity:.2f}',
+                        }
+                    )
+
+                    # Right TIR feature (on opposite strand for TIRs)
+                    feature_data.append(
+                        {
+                            'seqid': rec.id,
+                            'type': 'TIR',
+                            'start': right_tir_start,
+                            'end': right_tir_end,
+                            'score': f'{best_aln.percent_identity:.2f}',
+                            'strand': '-',
+                            'phase': '.',
+                            'attributes': f'ID={rec.id}_TIR_R;Name=Right_TIR;length={qry_end - qry_start + 1};identity={best_aln.percent_identity:.2f}',
+                        }
+                    )
+
+                # Generate segments using original logic
+                if report:
+                    if report in ['split', 'external', 'all']:
+                        if both:
+                            leftSeg = rec[ref_start : ref_end + 1]
+                            leftSeg.id = f'{leftSeg.id}_L_TIR'
+                            leftSeg.name = leftSeg.id
+                            leftSeg.description = f'[{rec.id} left TIR segment]'
+                            segments_list.append(leftSeg)
+
+                            rightSeg = rec[qry_start : qry_end + 1]
+                            rightSeg = rightSeg.reverse_complement(
+                                id=f'{rec.id}_R_TIR',
+                                name=f'{rec.id}_R_TIR',
+                                description=f'[{rec.id} right TIR segment, reverse complemented]',
+                            )
+                            segments_list.append(rightSeg)
+                        else:
+                            extSeg = rec[ref_start : ref_end + 1]
+                            extSeg.id = f'{extSeg.id}_TIR'
+                            extSeg.name = extSeg.id
+                            extSeg.description = f'[{rec.id} TIR segment]'
+                            segments_list.append(extSeg)
+
+                    if report in ['split', 'internal', 'all']:
+                        intSeg = rec[ref_end + 1 : qry_start]
+                        intSeg.id = f'{intSeg.id}_I'
+                        intSeg.name = intSeg.id
+                        intSeg.description = f'[{rec.id} internal segment]'
+                        segments_list.append(intSeg)
+
+                    if report == 'all':
+                        segments_list.append(rec)
+
+                if mites:
+                    spacer = 0
+                    synMITE = (
+                        rec[ref_start : ref_end + 1 + spacer]
+                        + rec[qry_start : qry_end + 1]
+                    )
+                    synMITE.id = f'{synMITE.id}_synMITE'
+                    synMITE.name = synMITE.id
+                    synMITE.description = f'[Synthetic MITE constructed from {rec.id} TIRs]'
+                    segments_list.append(synMITE)
+
+    finally:
+        # Clean up the temporary directory if keeptemp is False
+        if not keeptemp:
+            shutil.rmtree(tempDir)
+            logging.info(f'Temporary directory deleted: {tempDir}')
+        else:
+            logging.info(f'Temporary directory retained: {tempDir}')
+
+    # Return segments as a generator
+    return iter(segments_list), alignment_data, feature_data
+
+
+def getLTRs_with_data(
+    fasta_file: str,
+    flankdist: int = 10,
+    minid: float = 80,
+    minterm: int = 10,
+    minseed: int = 5,
+    diagfactor: float = 0.3,
+    report: str = 'split',
+    temp: Optional[str] = None,
+    keeptemp: bool = False,
+    alignTool: str = 'nucmer',
+    verbose: bool = True,
+    both: bool = False,
+    collect_alignments: bool = False,
+    collect_features: bool = False,
+) -> tuple:
+    """
+    Wrapper for getLTRs that additionally collects alignment and feature data.
+
+    This function calls getLTRs and captures alignment data for PAF output
+    and feature data for GFF3 output while preserving the original behavior.
+
+    Parameters
+    ----------
+    All parameters are the same as getLTRs, plus:
+    collect_alignments : bool, optional
+        Whether to collect alignment data for PAF output, by default False.
+    collect_features : bool, optional
+        Whether to collect feature data for GFF3 output, by default False.
+
+    Returns
+    -------
+    tuple
+        (segments_generator, alignment_data, feature_data)
+        - segments_generator: Generator yielding SeqRecords (same as getLTRs)
+        - alignment_data: List of dicts with alignment info (empty if collect_alignments=False)
+        - feature_data: List of dicts with feature info (empty if collect_features=False)
+    """
+    # Storage for alignment and feature data
+    alignment_data = []
+    feature_data = []
+
+    # If not collecting data, just return the original generator
+    if not collect_alignments and not collect_features:
+        segments = getLTRs(
+            fasta_file,
+            flankdist=flankdist,
+            minid=minid,
+            minterm=minterm,
+            minseed=minseed,
+            diagfactor=diagfactor,
+            report=report,
+            temp=temp,
+            keeptemp=keeptemp,
+            alignTool=alignTool,
+            verbose=verbose,
+            both=both,
+        )
+        return segments, alignment_data, feature_data
+
+    # We need to process the file ourselves to collect data
+    # Set temp directory to cwd if none is provided
+    if not temp:
+        temp = os.getcwd()
+
+    # Create a unique temporary directory
+    tempDir = tempfile.mkdtemp(prefix=f'tsplit_LTR_temp_{alignTool}_', dir=temp)
+    logging.debug(f'Temporary directory created: {tempDir}')
+
+    seen_ids = set()
+    segments_list = []
+
+    try:
+        # Iterate over each record in the fasta file
+        for rec in SeqIO.parse(fasta_file, 'fasta'):
+            logging.info(
+                f'Processing record {len(seen_ids) + 1}: Name: {rec.id}, Length: {len(rec)}bp'
+            )
+
+            # Check for duplicate IDs
+            if rec.id in seen_ids:
+                logging.error(f'Duplicate record ID found: {rec.id}')
+                raise ValueError(f'Duplicate record ID found: {rec.id}')
+
+            seen_ids.add(rec.id)
+
+            # Create temp paths for single element fasta and alignment coords
+            tempFasta = os.path.join(tempDir, cleanID(rec.id) + '.fasta')
+            tempCoords = os.path.join(
+                tempDir, cleanID(rec.id) + '_' + alignTool + '.coords'
+            )
+
+            # Write current element to single fasta
+            with open(tempFasta, 'w') as f:
+                SeqIO.write(rec, f, 'fasta')
+
+            # Align to self
+            if alignTool == 'nucmer':
+                runner = nucmer.Runner(
+                    tempFasta,
+                    tempFasta,
+                    tempCoords,
+                    min_id=minid,
+                    min_length=minseed,
+                    diagfactor=diagfactor,
+                    mincluster=minterm,
+                    breaklen=200,
+                    maxmatch=True,
+                    simplify=False,
+                )
+                runner.run()
+            elif alignTool == 'blastn':
+                cmd = makeBlast(seq=tempFasta, outfile=tempCoords, pid=minid)
+                run_cmd(cmd, verbose=verbose, workingDir=tempDir)
+
+            alignments = filterCoordsFileLTR(
+                tempCoords, rec, minterm=minterm, flankdist=flankdist
+            )
+
+            # If alignments exist, collect data and generate segments
+            if alignments:
+                # Get coordinates from best alignment (first in sorted list)
+                best_aln = alignments[0]
+                ref_start = best_aln.ref_coords().start
+                ref_end = best_aln.ref_coords().end
+                qry_start = best_aln.qry_coords().start
+                qry_end = best_aln.qry_coords().end
+
+                # Collect alignment data for PAF if requested
+                if collect_alignments:
+                    # LTRs are on the same strand
+                    strand = '+' if best_aln.on_same_strand() else '-'
+
+                    # Calculate number of matches from percent identity
+                    num_matches = int(
+                        best_aln.hit_length_ref * best_aln.percent_identity / 100.0
+                    )
+
+                    alignment_data.append(
+                        {
+                            'qry_name': rec.id,
+                            'qry_length': len(rec),
+                            'qry_start': qry_start,
+                            'qry_end': qry_end + 1,  # PAF uses end-exclusive
+                            'strand': strand,
+                            'ref_name': rec.id,
+                            'ref_length': len(rec),
+                            'ref_start': ref_start,
+                            'ref_end': ref_end + 1,  # PAF uses end-exclusive
+                            'num_matches': num_matches,
+                            'aln_block_length': best_aln.hit_length_ref,
+                            'mapping_quality': 255,  # Not available, use 255 (missing)
+                        }
+                    )
+
+                # Collect feature data for GFF3 if requested
+                if collect_features:
+                    # Create GFF3 features for LTRs
+                    # Convert to 1-based coordinates for GFF3
+                    left_ltr_start = ref_start + 1
+                    left_ltr_end = ref_end + 1
+                    right_ltr_start = qry_start + 1
+                    right_ltr_end = qry_end + 1
+
+                    # Left LTR feature
+                    feature_data.append(
+                        {
+                            'seqid': rec.id,
+                            'type': 'LTR',
+                            'start': left_ltr_start,
+                            'end': left_ltr_end,
+                            'score': f'{best_aln.percent_identity:.2f}',
+                            'strand': '+',
+                            'phase': '.',
+                            'attributes': f'ID={rec.id}_LTR_L;Name=Left_LTR;length={ref_end - ref_start + 1};identity={best_aln.percent_identity:.2f}',
+                        }
+                    )
+
+                    # Right LTR feature (on same strand for LTRs)
+                    feature_data.append(
+                        {
+                            'seqid': rec.id,
+                            'type': 'LTR',
+                            'start': right_ltr_start,
+                            'end': right_ltr_end,
+                            'score': f'{best_aln.percent_identity:.2f}',
+                            'strand': '+',
+                            'phase': '.',
+                            'attributes': f'ID={rec.id}_LTR_R;Name=Right_LTR;length={qry_end - qry_start + 1};identity={best_aln.percent_identity:.2f}',
+                        }
+                    )
+
+                # Generate segments using original logic
+                if report:
+                    if report in ['split', 'external', 'all']:
+                        if both:
+                            leftSeg = rec[ref_start : ref_end + 1]
+                            leftSeg.id = f'{leftSeg.id}_L_LTR'
+                            leftSeg.name = leftSeg.id
+                            leftSeg.description = f'[{rec.id} left LTR segment]'
+                            segments_list.append(leftSeg)
+
+                            rightSeg = rec[qry_start : qry_end + 1]
+                            rightSeg.id = f'{rec.id}_R_LTR'
+                            rightSeg.name = rightSeg.id
+                            rightSeg.description = f'[{rec.id} right LTR segment]'
+                            segments_list.append(rightSeg)
+                        else:
+                            extSeg = rec[ref_start : ref_end + 1]
+                            extSeg.id = f'{extSeg.id}_LTR'
+                            extSeg.name = extSeg.id
+                            extSeg.description = f'[{rec.id} LTR segment]'
+                            segments_list.append(extSeg)
+
+                    if report in ['split', 'internal', 'all']:
+                        intSeg = rec[ref_end + 1 : qry_start]
+                        intSeg.id = f'{intSeg.id}_I'
+                        intSeg.name = intSeg.id
+                        intSeg.description = f'[{rec.id} internal segment]'
+                        segments_list.append(intSeg)
+
+                    if report == 'all':
+                        segments_list.append(rec)
+
+    finally:
+        # Clean up the temporary directory if keeptemp is False
+        if not keeptemp:
+            shutil.rmtree(tempDir)
+            logging.info(f'Temporary directory deleted: {tempDir}')
+        else:
+            logging.info(f'Temporary directory retained: {tempDir}')
+
+    # Return segments as a generator
+    return iter(segments_list), alignment_data, feature_data
+
