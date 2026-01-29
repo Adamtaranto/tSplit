@@ -5,9 +5,11 @@
 
 # tSplit the TE-splitter
 
-Extract terminal repeats from retrotransposons (LTRs) or DNA transposons (TIRs). Returns compontent segments of the element for use with transposon mapping tools.
+tSplit is designed to identify terminal repeats from retrotransposons (LTRs)
+or DNA transposons (TIRs) by processing self-alignments.
 
-Optionally, `tsplit TIR` can also compose synthetic MITES from complete DNA transposons.
+Returns compontent internal and external segments of the element for use with
+transposon mapping tools.
 
 ## Table of contents
 
@@ -45,7 +47,8 @@ conda env create -f environment.yml
 conda activate tsplit
 ```
 
-After activating the tsplit environment you can use pip to install the latest version of tsplit.
+After activating the tsplit environment you can use pip to install the latest
+version of tsplit.
 
 Installation options:
 
@@ -72,7 +75,7 @@ Options are the same for each.
 
 See [CLI tutorial page](https://adamtaranto.github.io/tSplit/cli-docs/cli-tutorial/) for extended examples.
 
-### tsplit TIR
+### tsplit TIR example
 
 For each element in _TIR_element.fa_ split into internal and external (TIR) segments.
 
@@ -122,7 +125,7 @@ Output:
 
 </p>
 
-### tsplit LTR
+### tsplit LTR example
 
 For each element in _LTR_retrotransposon.fa_ split into internal and external
 segments.
