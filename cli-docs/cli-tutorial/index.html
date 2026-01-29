@@ -342,9 +342,18 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#generate-annotated-dotplot" class="md-nav__link">
+  <a href="#output-paf-alignments-and-gff-tir-annotations" class="md-nav__link">
     <span class="md-ellipsis">
-      Generate annotated dotplot
+      Output PAF alignments and GFF TIR annotations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generate-tir-annotated-dotplot" class="md-nav__link">
+    <span class="md-ellipsis">
+      Generate TIR annotated dotplot
     </span>
   </a>
   
@@ -361,6 +370,39 @@
       tsplit LTR
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="tsplit LTR">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-ltr-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic LTR processing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-paf-alignments-and-gff-ltr-annotations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Output PAF alignments and GFF LTR annotations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generate-ltr-annotated-dotplot" class="md-nav__link">
+    <span class="md-ellipsis">
+      Generate LTR annotated dotplot
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -467,9 +509,18 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#generate-annotated-dotplot" class="md-nav__link">
+  <a href="#output-paf-alignments-and-gff-tir-annotations" class="md-nav__link">
     <span class="md-ellipsis">
-      Generate annotated dotplot
+      Output PAF alignments and GFF TIR annotations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generate-tir-annotated-dotplot" class="md-nav__link">
+    <span class="md-ellipsis">
+      Generate TIR annotated dotplot
     </span>
   </a>
   
@@ -486,6 +537,39 @@
       tsplit LTR
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="tsplit LTR">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-ltr-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic LTR processing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-paf-alignments-and-gff-ltr-annotations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Output PAF alignments and GFF LTR annotations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generate-ltr-annotated-dotplot" class="md-nav__link">
+    <span class="md-ellipsis">
+      Generate LTR annotated dotplot
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -516,7 +600,8 @@
 <h3 id="basic-tir-processing">Basic TIR processing</h3>
 <p>For each element in <em>TIR_element.fa</em> split into internal and external (TIR) segments.</p>
 <p>Split segments will be written to <em>TIR_split_tsplit_output.fasta</em> with suffix "_I" for internal or "_TIR" for external segments.</p>
-<p>TIRs must be at least 10bp in length and share 80%
+<p>If the <code>--both</code> flag is set, then both left and right termini will be reported with suffixes "_L_TIR" and "_R_TIR".</p>
+<p>In this example, TIRs must be at least 10bp in length and share 80%
 identity and occur within 10bp of each end of the input element.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>tsplit<span class="w"> </span>TIR<span class="w"> </span>-i<span class="w"> </span>tests/data/TIR_element.fa<span class="w"> </span>-d<span class="w"> </span>results<span class="w"> </span>-p<span class="w"> </span>TIR_split
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
@@ -525,23 +610,58 @@ identity and occur within 10bp of each end of the input element.</p>
 </code></pre></div>
 <p>Output: <code>results/TIR_split_tsplit_output.fasta</code></p>
 <h3 id="report-both-tirs">Report both TIRs</h3>
-<p>With <code>--splitmode external</code> only the outermost TIR is returned. Setting <code>--both</code> returns both TIRs, useful if not identical.</p>
+<p>With <code>--splitmode external</code> only the outermost TIR is returned. Setting <code>--both</code> returns both TIRs - useful if not identical.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>tsplit<span class="w"> </span>TIR<span class="w"> </span>-i<span class="w"> </span>tests/data/TIR_element.fa<span class="w"> </span>-d<span class="w"> </span>results<span class="w"> </span>-p<span class="w"> </span>TIR_external_both<span class="w"> </span>--splitmode<span class="w"> </span>external<span class="w"> </span>--both
 </code></pre></div>
-<h3 id="generate-annotated-dotplot">Generate annotated dotplot</h3>
+<p>Output: <code>results/TIR_external_both_tsplit_output.fasta</code></p>
+<h3 id="output-paf-alignments-and-gff-tir-annotations">Output PAF alignments and GFF TIR annotations</h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>tsplit<span class="w"> </span>TIR<span class="w"> </span>-i<span class="w"> </span>tests/data/TIR_element.fa<span class="w"> </span>-d<span class="w"> </span>results<span class="w"> </span>--splitmode<span class="w"> </span>split<span class="w"> </span>--blast_evalue<span class="w"> </span><span class="m">0</span>.001<span class="w"> </span>--minid<span class="w"> </span><span class="m">60</span>.0<span class="w"> </span>--paf<span class="w"> </span>--gff
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>flexidot<span class="w"> </span>-i<span class="w"> </span>tests/data/TIR_element.fa<span class="w"> </span>-a<span class="w"> </span>results/TIR_element.paf<span class="w"> </span>-m<span class="w"> </span><span class="m">2</span><span class="w"> </span>-o<span class="w"> </span>results/blast_dotplot<span class="w"> </span>--gff<span class="w"> </span>results/TIR_element.gff3
 </code></pre></div>
-<p>Output:
-<img alt="TIR element blastn self-align dotplot with detected TIRs highlighted in red on the diagonal." src="../../images/TIR_blast_dotplot-Polydotplot.png" /></p>
+<p>Output:</p>
+<ul>
+<li><code>results/TIR_element_tsplit_output.fasta</code></li>
+<li><code>results/TIR_element.gff3</code></li>
+<li><code>results/TIR_element.paf</code></li>
+</ul>
+<h3 id="generate-tir-annotated-dotplot">Generate TIR annotated dotplot</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>flexidot<span class="w"> </span>-i<span class="w"> </span>tests/data/TIR_element.fa<span class="w"> </span>-a<span class="w"> </span>results/TIR_element.paf<span class="w"> </span>-m<span class="w"> </span><span class="m">2</span><span class="w"> </span>-o<span class="w"> </span>results/blast_dotplot<span class="w"> </span>--gff<span class="w"> </span>results/TIR_element.gff3
+</code></pre></div>
+<p>Output:</p>
+<p align="center">
+
+<img src="https://github.com/Adamtaranto/tSplit/blob/main/docs/images/TIR_blast_dotplot-Polydotplot.png?raw=true" alt="TIR element blastn self-align dotplot with detected TIRs highlighted in red on the diagonal." style="width:80%;height:auto;">
+
+</p>
+
 <h2 id="tsplit-ltr">tsplit LTR</h2>
+<h3 id="basic-ltr-processing">Basic LTR processing</h3>
 <p>For each element in <em>LTR_retrotransposon.fa</em> split into internal and external segments.</p>
 <p>Split segments will be written to <em>LTR_split_tsplit_output.fasta</em> with suffix "_I" for internal or "_LTR" for external segments.</p>
-<p>LTRs must be at least 10bp in length and share 80% identity and occur within 10bp of each end of the input element.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>tsplit<span class="w"> </span>LTR<span class="w"> </span>-i<span class="w"> </span>tests/data/LTR_retrotransposon.fa<span class="w"> </span>-p<span class="w"> </span>LTR_split
+<p>If the <code>--both</code> flag is set, then both left and right termini will be reported with suffixes "_L_LTR" and "_R_LTR".</p>
+<p>By default, LTRs must be at least 10bp in length and share 80% identity and occur within 10bp of each end of the input element.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>tsplit<span class="w"> </span>LTR<span class="w"> </span>-i<span class="w"> </span>tests/data/LTR_retrotransposon.fa<span class="w"> </span>-d<span class="w"> </span>results
 </code></pre></div>
-<p>Output: LTR_split_tsplit_output.fasta</p>
+<p>Output:</p>
+<ul>
+<li><code>results/LTR_retrotransposon_tsplit_output.fasta</code></li>
+</ul>
+<h3 id="output-paf-alignments-and-gff-ltr-annotations">Output PAF alignments and GFF LTR annotations</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>tsplit<span class="w"> </span>LTR<span class="w"> </span>-i<span class="w"> </span>tests/data/LTR_retrotransposon.fa<span class="w"> </span>-d<span class="w"> </span>results<span class="w"> </span>--splitmode<span class="w"> </span>split<span class="w"> </span>--blast_evalue<span class="w"> </span><span class="m">0</span>.001<span class="w"> </span>--minid<span class="w"> </span><span class="m">60</span>.0<span class="w"> </span>--paf<span class="w"> </span>--gff
+</code></pre></div>
+<p>Output:</p>
+<ul>
+<li><code>results/LTR_retrotransposon_tsplit_output.fasta</code></li>
+<li><code>results/LTR_retrotransposon.gff3</code></li>
+<li><code>results/LTR_retrotransposon.paf</code></li>
+</ul>
+<h3 id="generate-ltr-annotated-dotplot">Generate LTR annotated dotplot</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>flexidot<span class="w"> </span>-i<span class="w"> </span>tests/data/LTR_retrotransposon.fa<span class="w"> </span>-a<span class="w"> </span>results/LTR_retrotransposon.paf<span class="w"> </span>-m<span class="w"> </span><span class="m">2</span><span class="w"> </span>-o<span class="w"> </span>results/blast_dotplot<span class="w"> </span>--gff<span class="w"> </span>results/LTR_retrotransposon.gff3
+</code></pre></div>
+<p align="center">
+
+<img src="https://github.com/Adamtaranto/tSplit/blob/main/docs/images/LTR_blast_dotplot-Polydotplot.png?raw=true" alt="LTR element blastn self-align dotplot with detected LTRs highlighted in red on the diagonal." style="width:80%;height:auto;">
+
+</p>
 
 
 
