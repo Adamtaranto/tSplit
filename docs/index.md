@@ -9,31 +9,11 @@ Extract terminal repeats from retrotransposons (LTRs) or DNA transposons (TIRs).
 
 Optionally, `tsplit TIR` can also compose synthetic MITES from complete DNA transposons.
 
-## Table of contents
-
-- [Algorithm overview](#algorithm-overview)
-- [Options and usage](#options-and-usage)
-  - [Installing tSplit](#installing-tsplit)
-
-## Algorithm overview
-
-tSplit attempts to identify terminal repeats in transposable elements by
-first aligning each element to itself using `blastn` or `nucmer`, and then applying a set of
-tuneable heuristics to select an alignment pair most likely to represent an LTR or TIR, as follows:
-
-1. Exclude all diagonal/self-matches
-2. If `tsplit LTR`: Retain only alignment pairs on the same strand (tandem repeats)
-3. If `tsplit TIR`: Retain only alignment pairs on opposite strands (inverse repeats)
-4. Retain pairs for which the 5' match begins within x bases of element start
-   and whose 3' match ends within x bases of element end
-5. If multiple candidates remain select alignment pair with largest internal segment
-   (i.e. closest to element ends)
-
 ## Installing tSplit
 
 Requirements:
 
-- [pymummer](https://pypi.python.org/pypi/pymummer) version >= 0.10.3 with wrapper for nucmer option _--diagfactor_.
+- [pymummer](https://pypi.python.org/pypi/pymummer) version >= 0.10.3 (with wrapper for nucmer option _--diagfactor_.)
 - [MUMmer4](https://github.com/mummer4/mummer)
 - [BLAST+](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/) (Optional)
 
@@ -63,3 +43,17 @@ This is the best way to ensure you have the latest development version.
 ```bash
 pip install git+https://github.com/Adamtaranto/tSplit.git
 ```
+
+## Algorithm overview
+
+tSplit attempts to identify terminal repeats in transposable elements by
+first aligning each element to itself using `blastn` or `nucmer`, and then applying a set of
+tuneable heuristics to select an alignment pair most likely to represent an LTR or TIR, as follows:
+
+1. Exclude all diagonal/self-matches
+2. If `tsplit LTR`: Retain only alignment pairs on the same strand (tandem repeats)
+3. If `tsplit TIR`: Retain only alignment pairs on opposite strands (inverse repeats)
+4. Retain pairs for which the 5' match begins within x bases of element start
+   and whose 3' match ends within x bases of element end
+5. If multiple candidates remain select alignment pair with largest internal segment
+   (i.e. closest to element ends)
