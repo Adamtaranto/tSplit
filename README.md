@@ -12,9 +12,8 @@ Optionally, `tsplit TIR` can also compose synthetic MITES from complete DNA tran
 ## Table of contents
 
 - [Algorithm overview](#algorithm-overview)
-- [Options and usage](#options-and-usage)
-  - [Installing tSplit](#installing-tsplit)
-  - [Example usage](#example-usage)
+- [Installing tSplit](#installing-tsplit)
+- [Example usage](#example-usage)
 
 ## Algorithm overview
 
@@ -30,13 +29,11 @@ tuneable heuristics to select an alignment pair most likely to represent an LTR 
 5. If multiple candidates remain select alignment pair with largest internal segment
    (i.e. closest to element ends)
 
-## Options and usage
-
-### Installing tSplit
+## Installing tSplit
 
 Requirements:
 
-- [pymummer](https://pypi.python.org/pypi/pymummer) version >= 0.10.3 with wrapper for nucmer option _--diagfactor_.
+- [pymummer](https://pypi.python.org/pypi/pymummer) version >= 0.10.3 (with wrapper for nucmer option _--diagfactor_.)
 - [MUMmer4](https://github.com/mummer4/mummer)
 - [BLAST+](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/) (Optional)
 
@@ -67,11 +64,13 @@ This is the best way to ensure you have the latest development version.
 pip install git+https://github.com/Adamtaranto/tSplit.git
 ```
 
-### Example usage
+## Example usage
 
 tSplit can be run in two modes: `tsplit LTR` and `tsplit TIR`, for extracting long terminal repeats or terminal inverted repeats, respectively.
 
 Options are the same for each.
+
+See [CLI tutorial page](https://adamtaranto.github.io/tSplit/cli-docs/cli-tutorial/) for extended examples.
 
 ### tsplit TIR
 
@@ -94,29 +93,64 @@ Output: `TIR_split_tsplit_output.fasta`
 
 #### Visualise annotated dotplot
 
-```bash
-tsplit TIR -i tests/data/TIR_element.fa -d results --splitmode split --paf --gff
+Use the `--gff` and `--paf` options to output selected best termial repeat
+annotations and full self-alignments.
 
-flexidot -i tests/data/TIR_element.fa -a results/TIR_element.paf -m 2 -o results/blast_dotplot --gff results/TIR_element.gff3
+```bash
+tsplit TIR -i tests/data/TIR_element.fa -d results --splitmode split \
+--blast_evalue 0.001 --minid 60.0 --paf --gff
 ```
 
 Output:
-![TIR element blastn self-align dotplot with detected TIRs highlighted in red on the diagonal.](https://github.com/Adamtaranto/tSplit/blob/main/docs/images/TIR_blast_dotplot-Polydotplot.png?raw=true)
+
+- `results/TIR_element_tsplit_output.fasta`
+- `results/TIR_element.gff3`
+- `results/TIR_element.paf`
+
+These files can be visualised with [FlexiDot](https://github.com/flexidot-bio/flexidot).
+
+```bash
+flexidot -i tests/data/TIR_element.fa -a results/TIR_element.paf -m 2 \
+-o results/blast_dotplot --gff results/TIR_element.gff3
+```
+
+Output:
+
+<p align="center">
+
+<img src="https://github.com/Adamtaranto/tSplit/blob/main/docs/images/TIR_blast_dotplot-Polydotplot.png?raw=true" alt="TIR element blastn self-align dotplot with detected TIRs highlighted in red on the diagonal." style="width:80%;height:auto;">
+
+</p>
 
 ### tsplit LTR
 
-For each element in _LTR_retrotransposon.fa_ split into internal and external segments.
+For each element in _LTR_retrotransposon.fa_ split into internal and external
+segments.
 
-Split segments will be written to _LTR_split_tsplit_output.fasta_ with suffix "\_I" for internal or "\_LTR" for external segments.
+Split segments will be written to _LTR_split_tsplit_output.fasta_ with suffix
+"\_I" for internal or "\_LTR" for external segments.
 
-LTRs must be at least 10bp in length and share 80% identity and occur within 10bp of each end of the input element.
+LTRs must be at least 10bp in length and share 80% identity and occur within
+10bp of each end of the input element.
 
 ```bash
-tsplit LTR -i tests/data/LTR_retrotransposon.fa -p LTR_split
+tsplit LTR -i tests/data/LTR_retrotransposon.fa -d results --splitmode split \
+--blast_evalue 0.001 --minid 60.0 --paf --gff
 ```
 
-Output: LTR_split_tsplit_output.fasta
+Output:
 
-## License
+- `results/LTR_retrotransposon_tsplit_output.fasta`
+- `results/LTR_retrotransposon.gff3`
+- `results/LTR_retrotransposon.paf`
 
-Software provided under GPL-3 license.
+```bash
+flexidot -i tests/data/LTR_retrotransposon.fa -a results/LTR_retrotransposon.paf \
+-m 2 -o results/blast_dotplot --gff results/LTR_retrotransposon.gff3
+```
+
+<p align="center">
+
+<img src="https://github.com/Adamtaranto/tSplit/blob/main/docs/images/LTR_blast_dotplot-Polydotplot.png?raw=true" alt="LTR element blastn self-align dotplot with detected LTRs highlighted in red on the diagonal." style="width:80%;height:auto;">
+
+</p>
