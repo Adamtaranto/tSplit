@@ -272,9 +272,9 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#table-of-contents" class="md-nav__link">
+  <a href="#installing-tsplit" class="md-nav__link">
     <span class="md-ellipsis">
-      Table of contents
+      Installing tSplit
     </span>
   </a>
   
@@ -284,15 +284,6 @@
   <a href="#algorithm-overview" class="md-nav__link">
     <span class="md-ellipsis">
       Algorithm overview
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#installing-tsplit" class="md-nav__link">
-    <span class="md-ellipsis">
-      Installing tSplit
     </span>
   </a>
   
@@ -377,9 +368,9 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#table-of-contents" class="md-nav__link">
+  <a href="#installing-tsplit" class="md-nav__link">
     <span class="md-ellipsis">
-      Table of contents
+      Installing tSplit
     </span>
   </a>
   
@@ -389,15 +380,6 @@
   <a href="#algorithm-overview" class="md-nav__link">
     <span class="md-ellipsis">
       Algorithm overview
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#installing-tsplit" class="md-nav__link">
-    <span class="md-ellipsis">
-      Installing tSplit
     </span>
   </a>
   
@@ -426,29 +408,10 @@
 <h1 id="tsplit-the-te-splitter">tSplit the TE-splitter</h1>
 <p>Extract terminal repeats from retrotransposons (LTRs) or DNA transposons (TIRs). Returns compontent segments of the element for use with transposon mapping tools.</p>
 <p>Optionally, <code>tsplit TIR</code> can also compose synthetic MITES from complete DNA transposons.</p>
-<h2 id="table-of-contents">Table of contents</h2>
-<ul>
-<li><a href="#algorithm-overview">Algorithm overview</a></li>
-<li><a href="#options-and-usage">Options and usage</a></li>
-<li><a href="#installing-tsplit">Installing tSplit</a></li>
-</ul>
-<h2 id="algorithm-overview">Algorithm overview</h2>
-<p>tSplit attempts to identify terminal repeats in transposable elements by
-first aligning each element to itself using <code>blastn</code> or <code>nucmer</code>, and then applying a set of
-tuneable heuristics to select an alignment pair most likely to represent an LTR or TIR, as follows:</p>
-<ol>
-<li>Exclude all diagonal/self-matches</li>
-<li>If <code>tsplit LTR</code>: Retain only alignment pairs on the same strand (tandem repeats)</li>
-<li>If <code>tsplit TIR</code>: Retain only alignment pairs on opposite strands (inverse repeats)</li>
-<li>Retain pairs for which the 5' match begins within x bases of element start
-   and whose 3' match ends within x bases of element end</li>
-<li>If multiple candidates remain select alignment pair with largest internal segment
-   (i.e. closest to element ends)</li>
-</ol>
 <h2 id="installing-tsplit">Installing tSplit</h2>
 <p>Requirements:</p>
 <ul>
-<li><a href="https://pypi.python.org/pypi/pymummer">pymummer</a> version &gt;= 0.10.3 with wrapper for nucmer option <em>--diagfactor</em>.</li>
+<li><a href="https://pypi.python.org/pypi/pymummer">pymummer</a> version &gt;= 0.10.3 (with wrapper for nucmer option <em>--diagfactor</em>.)</li>
 <li><a href="https://github.com/mummer4/mummer">MUMmer4</a></li>
 <li><a href="https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/">BLAST+</a> (Optional)</li>
 </ul>
@@ -471,6 +434,19 @@ tuneable heuristics to select an alignment pair most likely to represent an LTR 
 <p>This is the best way to ensure you have the latest development version.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/Adamtaranto/tSplit.git
 </code></pre></div>
+<h2 id="algorithm-overview">Algorithm overview</h2>
+<p>tSplit attempts to identify terminal repeats in transposable elements by
+first aligning each element to itself using <code>blastn</code> or <code>nucmer</code>, and then applying a set of
+tuneable heuristics to select an alignment pair most likely to represent an LTR or TIR, as follows:</p>
+<ol>
+<li>Exclude all diagonal/self-matches</li>
+<li>If <code>tsplit LTR</code>: Retain only alignment pairs on the same strand (tandem repeats)</li>
+<li>If <code>tsplit TIR</code>: Retain only alignment pairs on opposite strands (inverse repeats)</li>
+<li>Retain pairs for which the 5' match begins within x bases of element start
+   and whose 3' match ends within x bases of element end</li>
+<li>If multiple candidates remain select alignment pair with largest internal segment
+   (i.e. closest to element ends)</li>
+</ol>
 
 
 
