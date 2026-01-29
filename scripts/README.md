@@ -18,7 +18,7 @@ Caveats:
 
 _data/mintest.fa_
 
-```
+```text
 >test_seq   tsd_5_TCAGT_k8_AGTCCCGG_int_1-21_33-50
 GGTCAGTAGTCCCGGATGATACTATCCATATGCCGGGACTTCAGTGCGCA
 ```
@@ -33,7 +33,7 @@ python tsd-tir-interval-finder.py --infile data/mintest.fa --left 1-21 --right 3
 Output:
 _test_results.tsv_
 
-```
+```text
 left_pos	left_kmer	right_pos	right_kmer	mismatch_count	left_tsd	right_tsd	tsd_mismatch_count	tsd_len
 8	AGTCCCGG	40	AGTCCCGG	0	TCAGT	TCAGT	0	5
 
@@ -41,7 +41,7 @@ left_pos	left_kmer	right_pos	right_kmer	mismatch_count	left_tsd	right_tsd	tsd_mi
 
 _test_annotations.gff3_
 
-```
+```text
 ##gff-version 3
 test_seq	TIR_finder	search_region	1	21	.	.	.	ID=search_region_L;Name=Left_search_interval
 test_seq	TIR_finder	search_region	33	50	.	.	.	ID=search_region_R;Name=Right_search_interval

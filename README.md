@@ -82,7 +82,6 @@ Split segments will be written to _TIR_split_tsplit_output.fasta_ with suffix "\
 TIRs must be at least 10bp in length and share 80%
 identity and occur within 10bp of each end of the input element.
 
-
 ```bash
 tsplit TIR -i tests/data/TIR_element.fa -p TIR_split
 
