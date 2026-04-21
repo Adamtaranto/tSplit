@@ -46,6 +46,11 @@ dev = [
     "ruff",
 ]
 
+test = [
+        "pytest-cov",
+        "pytest",
+]
+
 # Project URLs
 [project.urls]
 homepage = "https://github.com/adamtaranto/tSplit"
