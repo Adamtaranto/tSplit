@@ -393,7 +393,7 @@ def filterCoordsFileTIR(
     # x.qry_end - x.ref_end =
     # 5'end of right TIR - 3' end of left TIR = length of internal segment
     # TIR pair with largest internal segment (outermost TIRs) is first in list.
-    alignments = sorted(alignments, key=lambda x: (x.qry_end - x.ref_end), reverse=True)
+    alignments = sorted(alignments, key=lambda x: x.qry_end - x.ref_end, reverse=True)
 
     return alignments
 
@@ -724,9 +724,7 @@ def filterCoordsFileLTR(
 
     # Sort largest to smallest dist between end of ref (subject) and start of query (hit)
     # x.qry_start (3') - x.ref_end (5') = Length of internal segment
-    alignments = sorted(
-        alignments, key=lambda x: (x.qry_start - x.ref_end), reverse=True
-    )
+    alignments = sorted(alignments, key=lambda x: x.qry_start - x.ref_end, reverse=True)
 
     return alignments
 
