@@ -26,7 +26,7 @@ jobs:
       # Install any additional dependencies not included in the pyproject.toml file
       - name: Install additional dependencies
         run: |
-          #conda install -y -c conda-forge -c bioconda mummer blast
+          conda install -y -c conda-forge -c bioconda mummer blast
           python -m pip install --upgrade pip setuptools wheel
           python -m pip install --retries 10 --timeout 180 --prefer-binary --progress-bar off --no-cache-dir '.[test]'
         shell: bash -l {0}
